@@ -42,7 +42,6 @@ namespace BeachBuddy
             
             services.AddDbContext<BeachBuddyContext>(options =>
             {
-            
                 if (CurrentEnvironment.IsDevelopment())
                 {
                     // Use local Docker DB
@@ -94,8 +93,6 @@ namespace BeachBuddy
                     }
                 }
             );
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
