@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BeachBuddy.DbContexts;
+using BeachBuddy.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,23 +38,23 @@ namespace BeachBuddy
             // Library used to map objects to DTOs
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            // services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
-            //
-            // services.AddDbContext<BeachBuddyContext>(options =>
-            // {
-            //
-            //     if (CurrentEnvironment.IsDevelopment())
-            //     {
-            //         // Use local Docker DB
-            //         options.UseSqlServer(Configuration.GetConnectionString("CourseLibraryDB"));
-            //     }
-            //     else
-            //     {
-            //         // In Prod use the Docker-Compose database
-            //         var connection = @"Server=db;Database=CourseLibraryDB;User=sa;Password=abcABC123;";
-            //         options.UseSqlServer(connection);
-            //     }
-            // });
+            services.AddScoped<IBeachBuddyRepository, BeachBuddyRepository>();
+            
+            services.AddDbContext<BeachBuddyContext>(options =>
+            {
+            
+                if (CurrentEnvironment.IsDevelopment())
+                {
+                    // Use local Docker DB
+                    options.UseSqlServer(Configuration.GetConnectionString("BeachBuddyDB"));
+                }
+                else
+                {
+                    // In Prod use the Docker-Compose database
+                    var connection = @"Server=db;Database=BeachBuddyDB;User=sa;Password=abcABC123;";
+                    options.UseSqlServer(connection);
+                }
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
