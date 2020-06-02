@@ -14,6 +14,6 @@ namespace BeachBuddy.Models
         
         public int StarCount { get; set; }
         
-        public string KanJamWinCount { get; set; } 
+        public int KanJamWinCount { get; set; } 
     }
 }
