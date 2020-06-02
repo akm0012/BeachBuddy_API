@@ -11,6 +11,8 @@ namespace BeachBuddy.Profiles
                     dest => dest.FullName,
                     memberOptions
                         => memberOptions.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+
+            CreateMap<Models.UpdateUserDto, Entities.User>();
         }
     }
 }
