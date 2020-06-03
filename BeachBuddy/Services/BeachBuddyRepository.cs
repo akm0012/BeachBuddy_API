@@ -60,6 +60,36 @@ namespace BeachBuddy.Services
             return _context.Users.Any(user => user.Id == userId);
         }
 
+        public IEnumerable<Item> GetItems()
+        {
+            return _context.Items.OrderBy(item => item.Name).ToList();
+        }
+
+        public User GetItem(Guid itemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddItem(Item item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateItem(Item item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteItem(Item item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ItemExists(Guid itemId)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);

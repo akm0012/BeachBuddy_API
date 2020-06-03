@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeachBuddy.Migrations
 {
     [DbContext(typeof(BeachBuddyContext))]
-    [Migration("20200602011542_InitialMigration")]
+    [Migration("20200603133502_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,66 @@ namespace BeachBuddy.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("BeachBuddy.Entities.Item", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(1500)")
+                        .HasMaxLength(1500);
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9287e8eb-3f81-4f3a-b54e-fd6ec8e39d7a"),
+                            Count = 12,
+                            Description = "A delicious and refreshing lime beverage.",
+                            ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Lime_A_Vertical-683x1024.jpg",
+                            Name = "LaCroix (Lime)"
+                        },
+                        new
+                        {
+                            Id = new Guid("2b7f8bb5-ec72-4f3f-9ba9-5974366bd4c0"),
+                            Count = 12,
+                            Description = "A delicious and refreshing coconut beverage.",
+                            ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Coconut_A_Vertical-683x1024.jpg",
+                            Name = "LaCroix (Coconut)"
+                        },
+                        new
+                        {
+                            Id = new Guid("de761cf2-a73f-480a-8697-87ed2fec9691"),
+                            Count = 6,
+                            Description = "A delicious and refreshing adult beverage.",
+                            ImageUrl = "https://cdn.justwineapp.com/assets/beer/bottle/1st-republic-brewing-company-corona-light_1477953503.png",
+                            Name = "Corona Light"
+                        },
+                        new
+                        {
+                            Id = new Guid("3c8166d3-24eb-4d54-81b7-d4417c72d281"),
+                            Count = 2,
+                            Description = "The real MVP of the beach trip.",
+                            ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71alXyECmDL._SL1500_.jpg",
+                            Name = "Sun Screen SPF 30"
+                        });
+                });
 
             modelBuilder.Entity("BeachBuddy.Entities.User", b =>
                 {
@@ -50,7 +110,7 @@ namespace BeachBuddy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1783ec3d-e689-4249-9e08-7ea71590eb27"),
+                            Id = new Guid("0a035c88-d2b2-484f-8a7b-a1d35f9abc78"),
                             FirstName = "Andrew",
                             KanJamWinCount = 0,
                             LastName = "Marshall",
@@ -58,7 +118,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6966b63f-de4e-4854-aaf1-27d3ea963097"),
+                            Id = new Guid("d9aa2704-d604-400f-97e7-5efe501da039"),
                             FirstName = "Lena",
                             KanJamWinCount = 0,
                             LastName = "Brottman",
@@ -66,7 +126,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("be21613c-249c-4703-8571-e7a371133c91"),
+                            Id = new Guid("db3916d0-e4c1-471a-bf03-08785d110d61"),
                             FirstName = "Clayton",
                             KanJamWinCount = 0,
                             LastName = "French",
@@ -74,7 +134,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1b301c75-dbb9-436e-996d-9bff2cf0d5a3"),
+                            Id = new Guid("3ba590b5-24ab-453a-b381-fc8ccd42aff9"),
                             FirstName = "Erica",
                             KanJamWinCount = 0,
                             LastName = "Moore",
@@ -82,7 +142,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0ddeea52-cf23-4e91-9b65-fce283aa3a11"),
+                            Id = new Guid("8016c161-b76d-42a0-b30a-f51e5ae69f54"),
                             FirstName = "Stephen",
                             KanJamWinCount = 0,
                             LastName = "Elkourie",
@@ -90,7 +150,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bfe1bb10-a683-4408-8bdb-d771248c695f"),
+                            Id = new Guid("80d20a13-0dcb-4351-8a33-4067785cd93c"),
                             FirstName = "Lacey",
                             KanJamWinCount = 0,
                             LastName = "Gibbs",

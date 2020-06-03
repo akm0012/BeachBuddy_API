@@ -12,6 +12,14 @@ namespace BeachBuddy.Services
         void UpdateUser(User user);
         void DeleteUser(User user);
         bool UserExists(Guid userId);
+        
+        IEnumerable<Item> GetItems();
+        User GetItem(Guid itemId);
+        void AddItem(Item item);
+        void UpdateItem(Item item);
+        void DeleteItem(Item item);
+        bool ItemExists(Guid itemId);
+        
         bool Save();
     }
 }
