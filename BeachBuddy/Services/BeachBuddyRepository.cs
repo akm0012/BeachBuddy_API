@@ -42,8 +42,7 @@ namespace BeachBuddy.Services
 
         public void UpdateUser(User user)
         {
-            // no code in this implementation
-            // Auto Mapper will change the instance and it will save it for us 
+            _context.Users.Update(user);
         }
 
         public void DeleteUser(User user)

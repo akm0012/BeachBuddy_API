@@ -58,5 +58,39 @@ namespace BeachBuddy.Controllers
 
             return NoContent();
         }
+        
+        [HttpPost("{userId}/incrementCount")]
+        public IActionResult IncrementCountForUser(Guid userId, IncrementCountDto incrementCountDto)
+        {
+            var userToUpdate = _beachBuddyRepository.GetUser(userId);
+            if (userToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            switch (incrementCountDto.AttributeName)
+            {
+                case "StarCount":
+                    userToUpdate.StarCount += incrementCountDto.IncrementAmount;
+                    if (userToUpdate.StarCount < 0)
+                    {
+                        userToUpdate.StarCount = 0;
+                    }
+                    break;
+                
+                case "KanJamWinCount":
+                    userToUpdate.KanJamWinCount += incrementCountDto.IncrementAmount;
+                    if (userToUpdate.KanJamWinCount < 0)
+                    {
+                        userToUpdate.KanJamWinCount = 0;
+                    }
+                    break;
+            }
+
+            _beachBuddyRepository.UpdateUser(userToUpdate);
+            _beachBuddyRepository.Save();
+            
+            return Ok(_mapper.Map<UserDto>(userToUpdate));
+        }
     }
 }
