@@ -14,7 +14,7 @@ namespace BeachBuddy.Services
         bool UserExists(Guid userId);
         
         IEnumerable<Item> GetItems();
-        User GetItem(Guid itemId);
+        Item GetItem(Guid itemId);
         void AddItem(Item item);
         void UpdateItem(Item item);
         void DeleteItem(Item item);

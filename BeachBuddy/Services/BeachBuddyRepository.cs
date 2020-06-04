@@ -42,11 +42,20 @@ namespace BeachBuddy.Services
 
         public void UpdateUser(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            
             _context.Users.Update(user);
         }
 
         public void DeleteUser(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
             _context.Users.Remove(user);
         }
 
@@ -65,29 +74,54 @@ namespace BeachBuddy.Services
             return _context.Items.OrderBy(item => item.Name).ToList();
         }
 
-        public User GetItem(Guid itemId)
+        public Item GetItem(Guid itemId)
         {
-            throw new NotImplementedException();
+            if (itemId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(itemId));
+            }
+
+            return _context.Items.FirstOrDefault(item => item.Id == itemId);
         }
 
         public void AddItem(Item item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            _context.Items.Add(item);
         }
 
         public void UpdateItem(Item item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            _context.Items.Update(item);
         }
 
         public void DeleteItem(Item item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            _context.Items.Remove(item);
         }
 
         public bool ItemExists(Guid itemId)
         {
-            throw new NotImplementedException();
+            if (itemId == null)
+            {
+                throw new ArgumentNullException(nameof(itemId));
+            }
+
+            return _context.Items.Any(item => item.Id == itemId);
         }
 
         public bool Save()
