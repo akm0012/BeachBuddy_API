@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.DbContexts;
-using BeachBuddy.Services;
+using BeachBuddy.Repositories;
+using BeachBuddy.Services.Weather;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,10 @@ namespace BeachBuddy
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IBeachBuddyRepository, BeachBuddyRepository>();
+            
+            services.AddScoped<IWeatherService, OpenWeatherMapService>();
+            
+            services.AddHttpClient();
             
             services.AddDbContext<BeachBuddyContext>(options =>
             {

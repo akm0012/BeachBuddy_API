@@ -4,7 +4,7 @@ using System.Linq;
 using BeachBuddy.DbContexts;
 using BeachBuddy.Entities;
 
-namespace BeachBuddy.Services
+namespace BeachBuddy.Repositories
 {
     public class BeachBuddyRepository : IBeachBuddyRepository, IDisposable
     {

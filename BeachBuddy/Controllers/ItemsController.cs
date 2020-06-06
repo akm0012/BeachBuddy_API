@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using BeachBuddy.Entities;
 using BeachBuddy.Models;
-using BeachBuddy.Services;
+using BeachBuddy.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeachBuddy.Controllers

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using BeachBuddy.Entities;
 
-namespace BeachBuddy.Services
+namespace BeachBuddy.Repositories
 {
     public interface IBeachBuddyRepository
     {
