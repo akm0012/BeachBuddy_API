@@ -18,11 +18,8 @@ namespace BeachBuddy.Services.Weather
 
         public async Task<OpenWeatherDto> GetWeather(string lat, string lon)
         {
-            var requestUri = "https://api.openweathermap.org/data/2.5/onecall?lat={{lat}}&lon={{lon}}&appid=055c737018d06a4165998ae99d562ac9&units=imperial";
+            var requestUri = $"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&appid={APIKeys.OpenWeatherApiKey}&units=imperial";
 
-            requestUri = requestUri.Replace("{{lat}}", lat);
-            requestUri = requestUri.Replace("{{lon}}", lon);
-            
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             // request.Headers.Add("Accept", "application/vnd.github.v3+json");
             // request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
