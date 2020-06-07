@@ -16,30 +16,29 @@ namespace BeachBuddy.Services.Weather
             _clientFactory = httpClientFactory;
         }
 
-        public async Task<OpenWeatherDto> GetWeather(long lat, long lon)
+        public async Task<OpenWeatherDto> GetWeather(string lat, string lon)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get,
-                "https://api.github.com/repos/aspnet/AspNetCore.Docs/branches");
-            request.Headers.Add("Accept", "application/vnd.github.v3+json");
-            request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
+            var requestUri = "https://api.openweathermap.org/data/2.5/onecall?lat={{lat}}&lon={{lon}}&appid=055c737018d06a4165998ae99d562ac9&units=imperial";
+
+            requestUri = requestUri.Replace("{{lat}}", lat);
+            requestUri = requestUri.Replace("{{lon}}", lon);
+            
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            // request.Headers.Add("Accept", "application/vnd.github.v3+json");
+            // request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
 
             var client = _clientFactory.CreateClient();
 
             var response = await client.SendAsync(request);
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode) return null;
+            await using var responseStream = await response.Content.ReadAsStreamAsync();
+            var weatherDto = await JsonSerializer.DeserializeAsync<OpenWeatherDto>(responseStream, new JsonSerializerOptions()
             {
-                using var responseStream = await response.Content.ReadAsStreamAsync();
-                // Branches = await JsonSerializer.DeserializeAsync
-                // <IEnumerable<GitHubBranch>>(responseStream);
-            }
-            else
-            {
-                // GetBranchesError = true;
-                // Branches = Array.Empty<GitHubBranch>();
-            }
+                PropertyNameCaseInsensitive = true,
+            });
+            return weatherDto;
 
-            return null;
         }
     }
 }

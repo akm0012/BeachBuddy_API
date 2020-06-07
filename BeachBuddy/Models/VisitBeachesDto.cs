@@ -50,6 +50,9 @@ namespace BeachBuddy.Models
         [JsonProperty("weather_summary")]
         public string WeatherSummary { get; set; }
         
+        [JsonProperty("wind_speed")]
+        public string WindSpeed { get; set; }
+        
         [JsonProperty("red_drift")]
         public string RedDrift { get; set; }
     }

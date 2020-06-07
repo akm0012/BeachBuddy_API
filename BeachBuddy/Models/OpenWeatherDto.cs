@@ -1,7 +1,13 @@
+using Newtonsoft.Json;
+
 namespace BeachBuddy.Models
 {
     public class OpenWeatherDto
     {
-        public long Lat { get; set; } 
+        public double Lat { get; set; } 
+        
+        public double Lon { get; set; } 
+
+        
     }
 }
