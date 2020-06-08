@@ -25,19 +25,9 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpGet("siestaKeyConditions")]
-        public async Task<ActionResult<OpenWeatherDto>> GetWeather()
+        public async Task<ActionResult<VisitBeachesDto>> GetWeather()
         {
-            // Scrape the HTML from VisitBeaches to get the beach conditions. 
-            List<VisitBeachesDto> visitBeachesDtos;
-            WebClient client = new WebClient();
-            var htmlCode = await client.DownloadStringTaskAsync("https://visitbeaches.org/#");
-            var startingIndex = htmlCode.IndexOf("var beaches = [") + 14;
-            var firstSplit = htmlCode.Substring(startingIndex);
-            var endIndex = firstSplit.IndexOf("];") + 1;
-            var finalString = htmlCode.Substring(startingIndex, endIndex);
-            visitBeachesDtos = JsonConvert.DeserializeObject<List<VisitBeachesDto>>(finalString);
-
-            return Ok(visitBeachesDtos[1]);
+            return Ok(await _weatherService.GetBeachConditions());
         }
 
         [HttpGet]

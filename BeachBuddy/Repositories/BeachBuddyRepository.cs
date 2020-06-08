@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BeachBuddy.DbContexts;
 using BeachBuddy.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeachBuddy.Repositories
 {
@@ -15,29 +17,29 @@ namespace BeachBuddy.Repositories
             _context = buddyContext ?? throw new ArgumentNullException(nameof(buddyContext));
         }
         
-        public IEnumerable<User> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return _context.Users.OrderBy(user => user.FirstName).ToList();
+            return await _context.Users.OrderBy(user => user.FirstName).ToListAsync();
         }
 
-        public User GetUser(Guid userId)
+        public async Task<User> GetUser(Guid userId)
         {
             if (userId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(userId));
             }
 
-            return _context.Users.FirstOrDefault(user => user.Id == userId);
+            return await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
         }
 
-        public void AddUser(User user)
+        public async Task AddUser(User user)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
 
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(user);
         }
 
         public void UpdateUser(User user)
@@ -59,39 +61,39 @@ namespace BeachBuddy.Repositories
             _context.Users.Remove(user);
         }
 
-        public bool UserExists(Guid userId)
+        public async Task<bool> UserExists(Guid userId)
         {
             if (userId == null)
             {
                 throw new ArgumentNullException(nameof(userId));
             }
 
-            return _context.Users.Any(user => user.Id == userId);
+            return await _context.Users.AnyAsync(user => user.Id == userId);
         }
 
-        public IEnumerable<Item> GetItems()
+        public async Task<IEnumerable<Item>> GetItems()
         {
-            return _context.Items.OrderBy(item => item.Name).ToList();
+            return await _context.Items.OrderBy(item => item.Name).ToListAsync();
         }
 
-        public Item GetItem(Guid itemId)
+        public async Task<Item> GetItem(Guid itemId)
         {
             if (itemId == Guid.Empty)
             {
                 throw new ArgumentNullException(nameof(itemId));
             }
 
-            return _context.Items.FirstOrDefault(item => item.Id == itemId);
+            return await _context.Items.FirstOrDefaultAsync(item => item.Id == itemId);
         }
 
-        public void AddItem(Item item)
+        public async Task AddItem(Item item)
         {
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
 
-            _context.Items.Add(item);
+            await _context.Items.AddAsync(item);
         }
 
         public void UpdateItem(Item item)
@@ -114,19 +116,19 @@ namespace BeachBuddy.Repositories
             _context.Items.Remove(item);
         }
 
-        public bool ItemExists(Guid itemId)
+        public async Task<bool> ItemExists(Guid itemId)
         {
             if (itemId == null)
             {
                 throw new ArgumentNullException(nameof(itemId));
             }
 
-            return _context.Items.Any(item => item.Id == itemId);
+            return await _context.Items.AnyAsync(item => item.Id == itemId);
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            return (_context.SaveChanges() >= 0);
+            return await _context.SaveChangesAsync() >= 0;
         }
 
         public void Dispose()

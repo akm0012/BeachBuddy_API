@@ -6,5 +6,6 @@ namespace BeachBuddy.Services.Weather
     public interface IWeatherService
     {
         Task<OpenWeatherDto> GetWeather(string lat, string lon);
+        Task<VisitBeachesDto> GetBeachConditions();
     }
 }

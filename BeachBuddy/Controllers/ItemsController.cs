@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.Entities;
 using BeachBuddy.Models;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BeachBuddy.Controllers
 {
     [ApiController]
-    [Route("api/items", Name = "GetItem")]
+    [Route("api/items")]
     public class ItemsController : ControllerBase
     {
         private readonly IBeachBuddyRepository _beachBuddyRepository;
@@ -25,9 +26,22 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Item>> GetItems()
+        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
         {
-            return Ok(_mapper.Map<IEnumerable<ItemDto>>(_beachBuddyRepository.GetItems()));
+            return Ok(_mapper.Map<IEnumerable<ItemDto>>(await _beachBuddyRepository.GetItems()));
+        }
+        
+        [HttpGet("{itemId}", Name = "GetItem")]
+        public async Task<ActionResult<Item>> GetItem(Guid itemId)
+        {
+            var item = await _beachBuddyRepository.GetItem(itemId);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(_mapper.Map<ItemDto>(item));
         }
 
         [HttpPost]
@@ -43,9 +57,9 @@ namespace BeachBuddy.Controllers
         }
         
         [HttpPost("{itemId}")]
-        public IActionResult UpdateItem(Guid itemId, UpdateItemDto updateItemDto)
+        public async Task<IActionResult> UpdateItem(Guid itemId, UpdateItemDto updateItemDto)
         {
-            var itemToUpdate = _beachBuddyRepository.GetItem(itemId);
+            var itemToUpdate = await _beachBuddyRepository.GetItem(itemId);
             if (itemToUpdate == null)
             {
                 return NotFound();
@@ -53,22 +67,22 @@ namespace BeachBuddy.Controllers
 
             _mapper.Map(updateItemDto, itemToUpdate);
             _beachBuddyRepository.UpdateItem(itemToUpdate);
-            _beachBuddyRepository.Save();
+            await _beachBuddyRepository.Save();
 
             return NoContent();
         }
         
         [HttpDelete("{itemId}")]
-        public IActionResult UpdateItem(Guid itemId)
+        public async Task<IActionResult> UpdateItem(Guid itemId)
         {
-            var itemToDelete = _beachBuddyRepository.GetItem(itemId);
+            var itemToDelete = await _beachBuddyRepository.GetItem(itemId);
             if (itemToDelete == null)
             {
                 return NotFound();
             }
 
             _beachBuddyRepository.DeleteItem(itemToDelete);
-            _beachBuddyRepository.Save();
+            await _beachBuddyRepository.Save();
 
             return NoContent();
         }

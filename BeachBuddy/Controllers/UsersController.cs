@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.Entities;
 using BeachBuddy.Models;
@@ -25,16 +26,16 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var usersFromRepo = _beachBuddyRepository.GetUsers();
+            var usersFromRepo = await _beachBuddyRepository.GetUsers();
             return Ok(_mapper.Map<IEnumerable<UserDto>>(usersFromRepo));
         }
         
         [HttpGet("{userId}", Name = "GetUser")]
-        public ActionResult<IEnumerable<User>> GetUser(Guid userId)
+        public async Task<ActionResult<IEnumerable<User>>> GetUser(Guid userId)
         {
-            var userFromRepo = _beachBuddyRepository.GetUser(userId);
+            var userFromRepo = await _beachBuddyRepository.GetUser(userId);
             if (userFromRepo == null)
             {
                 return NotFound();
@@ -42,32 +43,32 @@ namespace BeachBuddy.Controllers
             
             return Ok(_mapper.Map<UserDto>(userFromRepo));
         }
-
+        
         [HttpPost("{userId}")]
-        public IActionResult UpdateUser(Guid userId, UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateUser(Guid userId, UpdateUserDto updateUserDto)
         {
-            var userToUpdate = _beachBuddyRepository.GetUser(userId);
+            var userToUpdate = await _beachBuddyRepository.GetUser(userId);
             if (userToUpdate == null)
             {
                 return NotFound();
             }
-
+        
             _mapper.Map(updateUserDto, userToUpdate);
             _beachBuddyRepository.UpdateUser(userToUpdate);
-            _beachBuddyRepository.Save();
-
+            await _beachBuddyRepository.Save();
+        
             return NoContent();
         }
         
         [HttpPost("{userId}/incrementCount")]
-        public IActionResult IncrementCountForUser(Guid userId, IncrementCountDto incrementCountDto)
+        public async Task<IActionResult> IncrementCountForUser(Guid userId, IncrementCountDto incrementCountDto)
         {
-            var userToUpdate = _beachBuddyRepository.GetUser(userId);
+            var userToUpdate = await _beachBuddyRepository.GetUser(userId);
             if (userToUpdate == null)
             {
                 return NotFound();
             }
-
+        
             switch (incrementCountDto.AttributeName)
             {
                 case "StarCount":
@@ -86,9 +87,9 @@ namespace BeachBuddy.Controllers
                     }
                     break;
             }
-
+        
             _beachBuddyRepository.UpdateUser(userToUpdate);
-            _beachBuddyRepository.Save();
+            await _beachBuddyRepository.Save();
             
             return Ok(_mapper.Map<UserDto>(userToUpdate));
         }

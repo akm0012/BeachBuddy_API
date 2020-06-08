@@ -1,25 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BeachBuddy.Entities;
 
 namespace BeachBuddy.Repositories
 {
     public interface IBeachBuddyRepository
     {
-        IEnumerable<User> GetUsers();
-        User GetUser(Guid userId);
-        void AddUser(User user);
+        Task<IEnumerable<User>> GetUsers();
+        Task<User> GetUser(Guid userId);
+        Task AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
-        bool UserExists(Guid userId);
+        Task<bool> UserExists(Guid userId);
         
-        IEnumerable<Item> GetItems();
-        Item GetItem(Guid itemId);
-        void AddItem(Item item);
+        Task<IEnumerable<Item>> GetItems();
+        Task<Item> GetItem(Guid itemId);
+        Task AddItem(Item item);
         void UpdateItem(Item item);
         void DeleteItem(Item item);
-        bool ItemExists(Guid itemId);
+        Task<bool> ItemExists(Guid itemId);
         
-        bool Save();
+        Task<bool> Save();
     }
 }

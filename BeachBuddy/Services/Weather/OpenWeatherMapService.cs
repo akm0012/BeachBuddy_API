@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BeachBuddy.Models;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BeachBuddy.Services.Weather
 {
@@ -36,6 +39,23 @@ namespace BeachBuddy.Services.Weather
             });
             return weatherDto;
 
+        }
+
+        public async Task<VisitBeachesDto> GetBeachConditions()
+        {
+            // Scrape the HTML from VisitBeaches to get the beach conditions. 
+            List<VisitBeachesDto> visitBeachesDtos;
+            WebClient client = new WebClient();
+            var htmlCode = await client.DownloadStringTaskAsync("https://visitbeaches.org/#");
+            var startingIndex = htmlCode.IndexOf("var beaches = [") + 14;
+            var firstSplit = htmlCode.Substring(startingIndex);
+            var endIndex = firstSplit.IndexOf("];") + 1;
+            var finalString = htmlCode.Substring(startingIndex, endIndex);
+            visitBeachesDtos = JsonConvert.DeserializeObject<List<VisitBeachesDto>>(finalString);
+
+            var visitBeachesDto = visitBeachesDtos[1];
+            
+            return visitBeachesDto;
         }
     }
 }
