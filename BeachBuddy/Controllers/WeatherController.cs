@@ -23,31 +23,36 @@ namespace BeachBuddy.Controllers
             _weatherService = weatherService;
             _logger = logger;
         }
-        
+
         [HttpGet("siestaKeyConditions")]
         public async Task<ActionResult<OpenWeatherDto>> GetWeather()
         {
             // Scrape the HTML from VisitBeaches to get the beach conditions. 
+            List<VisitBeachesDto> visitBeachesDtos;
             WebClient client = new WebClient();
             var htmlCode = await client.DownloadStringTaskAsync("https://visitbeaches.org/#");
             var startingIndex = htmlCode.IndexOf("var beaches = [") + 14;
             var firstSplit = htmlCode.Substring(startingIndex);
             var endIndex = firstSplit.IndexOf("];") + 1;
             var finalString = htmlCode.Substring(startingIndex, endIndex);
-            List<VisitBeachesDto> test =
-                JsonConvert.DeserializeObject<List<VisitBeachesDto>>(finalString);
-            
-            return Ok(test[1]);
-        }
-        
-        [HttpGet("{lat},{lon}")]
-        public async Task<ActionResult<OpenWeatherDto>> GetWeatherForLatLong(string lat, string lon)
-        {
+            visitBeachesDtos = JsonConvert.DeserializeObject<List<VisitBeachesDto>>(finalString);
 
-            
-            // return await _weatherService.GetWeather(0, 0);
-            return Ok();
+            return Ok(visitBeachesDtos[1]);
         }
-        
+
+        [HttpGet]
+        public async Task<ActionResult<OpenWeatherDto>> GetWeatherForLatLong(
+            [FromQuery(Name = "lat")] string lat,
+            [FromQuery(Name = "lon")] string lon)
+        {
+            // Default to Sarasota, FL
+            if (lat == null || lon == null)
+            {
+                lat = "27.267804";
+                lon = "-82.553679";
+            }
+            
+            return Ok(await _weatherService.GetWeather(lat, lon));
+        }
     }
 }
