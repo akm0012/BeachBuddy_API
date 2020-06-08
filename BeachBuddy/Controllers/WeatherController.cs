@@ -45,7 +45,7 @@ namespace BeachBuddy.Controllers
             [FromQuery(Name = "lat")] string lat,
             [FromQuery(Name = "lon")] string lon)
         {
-            // Default to Sarasota
+            // Default to Sarasota, FL
             if (lat == null || lon == null)
             {
                 lat = "27.267804";
