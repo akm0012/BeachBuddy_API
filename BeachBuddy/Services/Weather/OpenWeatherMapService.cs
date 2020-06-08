@@ -19,8 +19,11 @@ namespace BeachBuddy.Services.Weather
             _clientFactory = httpClientFactory;
         }
 
-        public async Task<OpenWeatherDto> GetWeather(string lat, string lon)
+        public async Task<OpenWeatherDto> GetWeather(LatLonParameters latLonParameters)
         {
+            var lat = latLonParameters.Lat;
+            var lon = latLonParameters.Lon;
+            
             var requestUri = $"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&appid={APIKeys.OpenWeatherApiKey}&units=imperial";
 
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);

@@ -32,17 +32,9 @@ namespace BeachBuddy.Controllers
 
         [HttpGet]
         public async Task<ActionResult<OpenWeatherDto>> GetWeatherForLatLong(
-            [FromQuery(Name = "lat")] string lat,
-            [FromQuery(Name = "lon")] string lon)
+            [FromQuery] LatLonParameters latLonParameters)
         {
-            // Default to Sarasota, FL
-            if (lat == null || lon == null)
-            {
-                lat = "27.267804";
-                lon = "-82.553679";
-            }
-            
-            return Ok(await _weatherService.GetWeather(lat, lon));
+            return Ok(await _weatherService.GetWeather(latLonParameters));
         }
     }
 }

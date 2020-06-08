@@ -29,18 +29,10 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<DashboardDto>> GetDashboardData(
-            [FromQuery] string lat, [FromQuery] string lon)
+        public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] LatLonParameters latLonParameters)
         {
-            // Default to Sarasota, FL
-            if (lat == null || lon == null)
-            {
-                lat = "27.267804";
-                lon = "-82.553679";
-            }
-            
             var beachConditions = await _weatherService.GetBeachConditions();
-            var weatherData = await _weatherService.GetWeather(lat, lon);
+            var weatherData = await _weatherService.GetWeather(latLonParameters);
             var usersFromRepo = await _beachBuddyRepository.GetUsers();
             var itemsFromRepo = await _beachBuddyRepository.GetItems();
 
