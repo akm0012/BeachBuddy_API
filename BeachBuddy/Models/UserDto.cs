@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using BeachBuddy.Entities;
 
 namespace BeachBuddy.Models
 {
@@ -12,8 +14,6 @@ namespace BeachBuddy.Models
 
         public string FullName { get; set; }
         
-        public int StarCount { get; set; }
-        
-        public int KanJamWinCount { get; set; } 
+        public List<ScoreDto> Scores { get; set; }
     }
 }

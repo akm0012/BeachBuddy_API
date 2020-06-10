@@ -19,7 +19,9 @@ namespace BeachBuddy.Repositories
         
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _context.Users.OrderBy(user => user.FirstName).ToListAsync();
+            return await _context.Users
+                .Include(user => user.Scores)
+                .OrderBy(user => user.FirstName).ToListAsync();
         }
 
         public async Task<User> GetUser(Guid userId)
@@ -124,6 +126,61 @@ namespace BeachBuddy.Repositories
             }
 
             return await _context.Items.AnyAsync(item => item.Id == itemId);
+        }
+
+        public async Task<IEnumerable<Score>> GetScores()
+        {
+            return await _context.Scores.OrderBy(score => score.Name).ToListAsync();
+        }
+
+        public async Task<Score> GetScore(Guid scoreId)
+        {
+            if (scoreId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(scoreId));
+            }
+
+            return await _context.Scores.FirstOrDefaultAsync(score => score.Id == scoreId);
+        }
+
+        public async Task AddScore(Score score)
+        {
+            if (score == null)
+            {
+                throw new ArgumentNullException(nameof(score));
+            }
+
+            await _context.Scores.AddAsync(score);
+        }
+
+        public void UpdateScore(Score score)
+        {
+            if (score == null)
+            {
+                throw new ArgumentNullException(nameof(score));
+            }
+
+            _context.Scores.Update(score);
+        }
+
+        public void DeleteScore(Score score)
+        {
+            if (score == null)
+            {
+                throw new ArgumentNullException(nameof(score));
+            }
+
+            _context.Scores.Remove(score);
+        }
+
+        public async Task<bool> ScoreExists(Guid scoreId)
+        {
+            if (scoreId == null)
+            {
+                throw new ArgumentNullException(nameof(scoreId));
+            }
+
+            return await _context.Scores.AnyAsync(score => score.Id == scoreId);
         }
 
         public async Task<bool> Save()

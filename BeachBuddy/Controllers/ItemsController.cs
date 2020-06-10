@@ -45,11 +45,11 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateItem(AddItemDto addItemDto)
+        public async Task<ActionResult> CreateItem(AddItemDto addItemDto)
         {
             var itemToAdd = _mapper.Map<Entities.Item>(addItemDto);
-            _beachBuddyRepository.AddItem(itemToAdd);
-            _beachBuddyRepository.Save();
+            await _beachBuddyRepository.AddItem(itemToAdd);
+            await _beachBuddyRepository.Save();
 
             var itemToReturn = _mapper.Map<ItemDto>(itemToAdd);
 

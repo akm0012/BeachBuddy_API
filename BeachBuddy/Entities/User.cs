@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BeachBuddy.Entities
@@ -16,8 +18,7 @@ namespace BeachBuddy.Entities
         [MaxLength(50)]
         public string LastName { get; set; }
 
-        public int StarCount { get; set; }
-        
-        public int KanJamWinCount { get; set; }
+        public ICollection<Score> Scores { get; set; }
+            = new List<Score>();
     }
 }

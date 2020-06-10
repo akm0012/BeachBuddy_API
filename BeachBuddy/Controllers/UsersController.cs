@@ -60,38 +60,38 @@ namespace BeachBuddy.Controllers
             return NoContent();
         }
         
-        [HttpPost("{userId}/incrementCount")]
-        public async Task<IActionResult> IncrementCountForUser(Guid userId, IncrementCountDto incrementCountDto)
-        {
-            var userToUpdate = await _beachBuddyRepository.GetUser(userId);
-            if (userToUpdate == null)
-            {
-                return NotFound();
-            }
-        
-            switch (incrementCountDto.AttributeName)
-            {
-                case "StarCount":
-                    userToUpdate.StarCount += incrementCountDto.IncrementAmount;
-                    if (userToUpdate.StarCount < 0)
-                    {
-                        userToUpdate.StarCount = 0;
-                    }
-                    break;
-                
-                case "KanJamWinCount":
-                    userToUpdate.KanJamWinCount += incrementCountDto.IncrementAmount;
-                    if (userToUpdate.KanJamWinCount < 0)
-                    {
-                        userToUpdate.KanJamWinCount = 0;
-                    }
-                    break;
-            }
-        
-            _beachBuddyRepository.UpdateUser(userToUpdate);
-            await _beachBuddyRepository.Save();
-            
-            return Ok(_mapper.Map<UserDto>(userToUpdate));
-        }
+        // [HttpPost("{userId}/incrementCount")]
+        // public async Task<IActionResult> IncrementCountForUser(Guid userId, IncrementCountDto incrementCountDto)
+        // {
+        //     var userToUpdate = await _beachBuddyRepository.GetUser(userId);
+        //     if (userToUpdate == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //
+        //     switch (incrementCountDto.AttributeName)
+        //     {
+        //         case "StarCount":
+        //             userToUpdate.StarCount += incrementCountDto.IncrementAmount;
+        //             if (userToUpdate.StarCount < 0)
+        //             {
+        //                 userToUpdate.StarCount = 0;
+        //             }
+        //             break;
+        //         
+        //         case "KanJamWinCount":
+        //             userToUpdate.KanJamWinCount += incrementCountDto.IncrementAmount;
+        //             if (userToUpdate.KanJamWinCount < 0)
+        //             {
+        //                 userToUpdate.KanJamWinCount = 0;
+        //             }
+        //             break;
+        //     }
+        //
+        //     _beachBuddyRepository.UpdateUser(userToUpdate);
+        //     await _beachBuddyRepository.Save();
+        //     
+        //     return Ok(_mapper.Map<UserDto>(userToUpdate));
+        // }
     }
 }

@@ -12,57 +12,46 @@ namespace BeachBuddy.DbContexts
 
         public DbSet<User> Users { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Score> Scores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(
                 new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"),
                     FirstName = "Andrew",
-                    LastName = "Marshall",
-                    KanJamWinCount = 0,
-                    StarCount = 0
+                    LastName = "Marshall"
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("da2fd609-d754-4feb-8acd-c4f9ff13ba96"),
                     FirstName = "Lena",
-                    LastName = "Brottman",
-                    KanJamWinCount = 0,
-                    StarCount = 0
+                    LastName = "Brottman"
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"),
                     FirstName = "Clayton",
                     LastName = "French",
-                    KanJamWinCount = 0,
-                    StarCount = 0
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("102b566b-ba1f-404c-b2df-e2cde39ade09"),
                     FirstName = "Erica",
-                    LastName = "Moore",
-                    KanJamWinCount = 0,
-                    StarCount = 0
+                    LastName = "Moore"
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("5b3621c0-7b12-4e80-9c8b-3398cba7ee05"),
                     FirstName = "Stephen",
-                    LastName = "Elkourie",
-                    KanJamWinCount = 0,
-                    StarCount = 0
+                    LastName = "Elkourie"
                 },
                 new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("2aadd2df-7caf-45ab-9355-7f6332985a87"),
                     FirstName = "Lacey",
-                    LastName = "Gibbs",
-                    KanJamWinCount = 0,
-                    StarCount = 0
+                    LastName = "Gibbs"
                 }
             );
 
