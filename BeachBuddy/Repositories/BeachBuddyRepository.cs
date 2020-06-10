@@ -183,6 +183,71 @@ namespace BeachBuddy.Repositories
             return await _context.Scores.AnyAsync(score => score.Id == scoreId);
         }
 
+        public async Task<IEnumerable<RequestedItem>> GetRequestedItems()
+        {
+            return await _context.RequestedItems
+                .Include(item => item.RequestedByUser)
+                .OrderBy(r => r.CreatedDateTime).ToListAsync();
+        }
+
+        public async Task<IEnumerable<RequestedItem>> GetNotCompletedRequestedItems()
+        {
+            return await _context.RequestedItems
+                .Include(item => item.RequestedByUser)
+                .Where(r => !r.IsRequestCompleted)
+                .OrderBy(r => r.CreatedDateTime).ToListAsync();
+        }
+
+        public async Task<RequestedItem> GetRequestedItem(Guid requestedItemId)
+        {
+            if (requestedItemId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(requestedItemId));
+            }
+
+            return await _context.RequestedItems.FirstOrDefaultAsync(item => item.Id == requestedItemId);
+        }
+
+        public async Task AddRequestedItem(RequestedItem requestedItem)
+        {
+            if (requestedItem == null)
+            {
+                throw new ArgumentNullException(nameof(requestedItem));
+            }
+
+            await _context.RequestedItems.AddAsync(requestedItem);
+        }
+
+        public void UpdateRequestedItem(RequestedItem requestedItem)
+        {
+            if (requestedItem == null)
+            {
+                throw new ArgumentNullException(nameof(requestedItem));
+            }
+
+            _context.RequestedItems.Update(requestedItem);
+        }
+
+        public void DeleteRequestedItem(RequestedItem requestedItem)
+        {
+            if (requestedItem == null)
+            {
+                throw new ArgumentNullException(nameof(requestedItem));
+            }
+
+            _context.RequestedItems.Remove(requestedItem);
+        }
+
+        public async Task<bool> RequestedItemExists(Guid requestedItemId)
+        {
+            if (requestedItemId == null)
+            {
+                throw new ArgumentNullException(nameof(requestedItemId));
+            }
+
+            return await _context.RequestedItems.AnyAsync(item => item.Id == requestedItemId);
+        }
+
         public async Task<bool> Save()
         {
             return await _context.SaveChangesAsync() >= 0;

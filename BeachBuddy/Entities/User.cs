@@ -20,5 +20,8 @@ namespace BeachBuddy.Entities
 
         public ICollection<Score> Scores { get; set; }
             = new List<Score>();
+        
+        public ICollection<RequestedItem> RequestedItems { get; set; }
+            = new List<RequestedItem>();
     }
 }

@@ -13,6 +13,7 @@ namespace BeachBuddy.DbContexts
         public DbSet<User> Users { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Score> Scores { get; set; }
+        public DbSet<RequestedItem> RequestedItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

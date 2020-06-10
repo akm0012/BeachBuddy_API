@@ -23,11 +23,18 @@ namespace BeachBuddy.Repositories
         
         Task<IEnumerable<Score>> GetScores();
         Task<Score> GetScore(Guid scoreId);
-        // Task<IEnumerable<Score>> GetScoresForUser(Guid scoreId, Guid userId);
         Task AddScore(Score score);
         void UpdateScore(Score score);
         void DeleteScore(Score score);
         Task<bool> ScoreExists(Guid scoreId);
+        
+        Task<IEnumerable<RequestedItem>> GetRequestedItems();
+        Task<IEnumerable<RequestedItem>> GetNotCompletedRequestedItems();
+        Task<RequestedItem> GetRequestedItem(Guid requestedItemId);
+        Task AddRequestedItem(RequestedItem requestedItem);
+        void UpdateRequestedItem(RequestedItem requestedItem);
+        void DeleteRequestedItem(RequestedItem requestedItem);
+        Task<bool> RequestedItemExists(Guid requestedItemId);
         
         Task<bool> Save();
     }

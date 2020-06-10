@@ -4,14 +4,16 @@ using BeachBuddy.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeachBuddy.Migrations
 {
     [DbContext(typeof(BeachBuddyContext))]
-    partial class BeachBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20200610231241_Added Requested item updates 2")]
+    partial class AddedRequesteditemupdates2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace BeachBuddy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("285d5d7c-40b0-432e-9eb1-194a67a3cb9c"),
+                            Id = new Guid("3a3bc1f1-d3a4-41d7-a94a-10325da5cd16"),
                             Count = 12,
                             Description = "A delicious and refreshing lime beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Lime_A_Vertical-683x1024.jpg",
@@ -55,7 +57,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("be977732-74ad-48ce-8240-f549ac6b4c92"),
+                            Id = new Guid("15c3e56f-a228-4171-a46c-cfa813e4ad26"),
                             Count = 12,
                             Description = "A delicious and refreshing coconut beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Coconut_A_Vertical-683x1024.jpg",
@@ -63,7 +65,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f302117c-88c2-44b7-abe7-8b83cab6e745"),
+                            Id = new Guid("ee9e5db4-ef2f-4808-a867-1488610e2b80"),
                             Count = 6,
                             Description = "A delicious and refreshing adult beverage.",
                             ImageUrl = "https://cdn.justwineapp.com/assets/beer/bottle/1st-republic-brewing-company-corona-light_1477953503.png",
@@ -71,7 +73,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2d8cc887-721d-4ee0-8123-d28fa3e1a635"),
+                            Id = new Guid("e8a462cc-d744-4b7b-8b42-20d6e67ca7b9"),
                             Count = 2,
                             Description = "The real MVP of the beach trip.",
                             ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71alXyECmDL._SL1500_.jpg",
@@ -195,7 +197,7 @@ namespace BeachBuddy.Migrations
             modelBuilder.Entity("BeachBuddy.Entities.RequestedItem", b =>
                 {
                     b.HasOne("BeachBuddy.Entities.User", "RequestedByUser")
-                        .WithMany("RequestedItems")
+                        .WithMany()
                         .HasForeignKey("RequestedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
