@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.DbContexts;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services.Twilio;
 using BeachBuddy.Services.Weather;
+using BeachBuddy.Twilio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Twilio.Clients;
 
 namespace BeachBuddy
 {
@@ -42,7 +45,11 @@ namespace BeachBuddy
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IBeachBuddyRepository, BeachBuddyRepository>();
+            services.AddScoped<ITwilioWebhookRepository, TwilioWebhookRepository>();
 
+            services.AddHttpClient<ITwilioRestClient, TwilioClient>();
+
+            services.AddScoped<ITwilioService, TwilioService>();
             services.AddScoped<IWeatherService, OpenWeatherMapService>();
 
             services.AddHttpClient();
@@ -87,8 +94,13 @@ namespace BeachBuddy
             // Check if the secret access header is in the request
             app.Use(async (context, next) =>
                 {
-                    if (!context.Request.Headers.ContainsKey("AppToken") ||
-                        context.Request.Headers["AppToken"] != APIKeys.AppSecretHeader)
+                    if (context.Request.Path.Value == "/twilio/event/sms")
+                    {
+                        logger.LogDebug("Incoming Twilio WebHook, skipping Auth...");
+                        await next.Invoke();
+                    }
+                    else if (!context.Request.Headers.ContainsKey("AppToken") ||
+                             context.Request.Headers["AppToken"] != APIKeys.AppSecretHeader)
                     {
                         logger.LogWarning("Token was not found! Intruder alert!");
                         context.Response.StatusCode = 401;
