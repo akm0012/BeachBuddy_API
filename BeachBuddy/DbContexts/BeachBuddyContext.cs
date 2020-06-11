@@ -25,7 +25,7 @@ namespace BeachBuddy.DbContexts
                     FirstName = "Andrew",
                     LastName = "Marshall",
                     SkinType = SkinType.One,
-                    PhoneNumber = "7703557591",
+                    PhoneNumber = "+17703557591",
                     PhotoUrl = "StaticFiles/images/andrew.jpeg"
                 },
                 new User()
@@ -34,7 +34,7 @@ namespace BeachBuddy.DbContexts
                     FirstName = "Lena",
                     LastName = "Brottman",
                     SkinType = SkinType.Two,
-                    PhoneNumber = "8474945909",
+                    PhoneNumber = "+18474945909",
                     PhotoUrl = "StaticFiles/images/lena.jpeg"
                 },
                 new User()
@@ -43,7 +43,7 @@ namespace BeachBuddy.DbContexts
                     FirstName = "Clayton",
                     LastName = "French",
                     SkinType = SkinType.Three,
-                    PhoneNumber = "6784691861‬",
+                    PhoneNumber = "+16784691861‬",
                     PhotoUrl = "StaticFiles/images/clayton.jpeg"
                 },
                 new User()
@@ -52,7 +52,7 @@ namespace BeachBuddy.DbContexts
                     FirstName = "Erica",
                     LastName = "Moore",
                     SkinType = SkinType.Three,
-                    PhoneNumber = "6782662654",
+                    PhoneNumber = "+16782662654",
                     PhotoUrl = "StaticFiles/images/erica.jpeg"
                 },
                 new User()
@@ -61,7 +61,7 @@ namespace BeachBuddy.DbContexts
                     FirstName = "Stephen",
                     LastName = "Elkourie",
                     SkinType = SkinType.Five,
-                    PhoneNumber = "‭6782343314",
+                    PhoneNumber = "+1‭6782343314",
                     PhotoUrl = "StaticFiles/images/stephen.jpeg"
                 },
                 new User()
@@ -70,7 +70,7 @@ namespace BeachBuddy.DbContexts
                     FirstName = "Lacey",
                     LastName = "Gibbs",
                     SkinType = SkinType.Three,
-                    PhoneNumber = "2563935211‬",
+                    PhoneNumber = "+12563935211‬",
                     PhotoUrl = "StaticFiles/images/lacey.jpeg"
                 }
             );

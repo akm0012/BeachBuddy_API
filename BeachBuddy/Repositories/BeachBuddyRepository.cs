@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BeachBuddy.DbContexts;
 using BeachBuddy.Entities;
+using BeachBuddy.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeachBuddy.Repositories
@@ -32,6 +33,34 @@ namespace BeachBuddy.Repositories
             }
 
             return await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+        }
+
+        public async Task<IEnumerable<User>> GetUsers(UserResourceParameters userResourceParameters)
+        {
+            var phoneNumber = userResourceParameters.PhoneNumber;
+            var name = userResourceParameters.Name;
+
+            if (string.IsNullOrWhiteSpace(phoneNumber) && string.IsNullOrWhiteSpace(name))
+            {
+                return await GetUsers();
+            }
+
+            var users = _context.Users as IQueryable<User>;
+
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                phoneNumber = phoneNumber.Trim();
+                users = users.Where(user => user.PhoneNumber.Contains(phoneNumber));
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
+                users = users.Where(user => user.FirstName.Contains(name)
+                                            || user.LastName.Contains(name));
+            }
+
+            return await users.ToListAsync();
         }
 
         public async Task AddUser(User user)

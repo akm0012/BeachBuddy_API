@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BeachBuddy.Entities;
+using BeachBuddy.Models;
 using BeachBuddy.Models.Files;
 using BeachBuddy.Repositories;
 using BeachBuddy.Services.Twilio;
@@ -24,10 +26,19 @@ namespace BeachBuddy.Twilio
 
         public async Task MessageReceived(string fromNumber, string toNumber, string text, List<RemoteFile> files)
         {
+            var users = await _beachBuddyRepository.GetUsers(new UserResourceParameters()
+            {
+            PhoneNumber = fromNumber 
+            });
 
-            await _twilioService.SendSms(toNumber, fromNumber, text);
+            var userWhoSentMessage = users.FirstOrDefault();
+            if (userWhoSentMessage == null)
+            {
+                await _twilioService.SendSms(toNumber, fromNumber, "Sorry, I don't know who you are.");
+            }
             
             // Todo: do logic to create a new Requested Item
+            
             // var requestedItem = new RequestedItem()
             // {
             //     Name = "Todo"

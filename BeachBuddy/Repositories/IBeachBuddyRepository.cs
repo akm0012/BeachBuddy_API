@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BeachBuddy.Entities;
+using BeachBuddy.Models;
 
 namespace BeachBuddy.Repositories
 {
@@ -9,6 +10,7 @@ namespace BeachBuddy.Repositories
     {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUser(Guid userId);
+        Task<IEnumerable<User>> GetUsers(UserResourceParameters userResourceParameters);
         Task AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
