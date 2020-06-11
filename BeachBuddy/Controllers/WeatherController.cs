@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using BeachBuddy.Enums;
 using BeachBuddy.Models;
 using BeachBuddy.Services.Weather;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace BeachBuddy.Controllers
 {
@@ -35,6 +31,12 @@ namespace BeachBuddy.Controllers
             [FromQuery] LatLonParameters latLonParameters)
         {
             return Ok(await _weatherService.GetWeather(latLonParameters));
+        }
+
+        [HttpGet("safeExposure/{skinType}/{uvIndex}/{spf}")]
+        public ActionResult GetSafeExposureTime(SkinType skinType, double uvIndex, int spf)
+        {
+            return Ok(skinType.GetSafeExposureTime(uvIndex, spf));
         }
     }
 }

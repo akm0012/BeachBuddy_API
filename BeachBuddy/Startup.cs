@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -40,11 +42,11 @@ namespace BeachBuddy
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IBeachBuddyRepository, BeachBuddyRepository>();
-            
+
             services.AddScoped<IWeatherService, OpenWeatherMapService>();
-            
+
             services.AddHttpClient();
-            
+
             services.AddDbContext<BeachBuddyContext>(options =>
             {
                 if (CurrentEnvironment.IsDevelopment())
@@ -98,6 +100,13 @@ namespace BeachBuddy
                     }
                 }
             );
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+                RequestPath = "/StaticFiles"
+            });
 
             app.UseRouting();
 

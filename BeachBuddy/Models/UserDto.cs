@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BeachBuddy.Entities;
+using BeachBuddy.Enums;
 
 namespace BeachBuddy.Models
 {
@@ -14,6 +15,14 @@ namespace BeachBuddy.Models
 
         public string FullName { get; set; }
         
+        public SkinType SkinType { get; set; }
+        
+        public string PhoneNumber { get; set; }
+        
+        public string PhotoUrl { get; set; }
+        
         public List<ScoreDto> Scores { get; set; }
+        
+        public List<RequestedItem> RequestedItems { get; set; }
     }
 }

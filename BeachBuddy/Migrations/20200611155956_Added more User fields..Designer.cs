@@ -4,14 +4,16 @@ using BeachBuddy.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeachBuddy.Migrations
 {
     [DbContext(typeof(BeachBuddyContext))]
-    partial class BeachBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20200611155956_Added more User fields.")]
+    partial class AddedmoreUserfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace BeachBuddy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ef2da8e5-54d7-4c64-a0b0-56a767dc15a1"),
+                            Id = new Guid("7b0eea51-2908-401c-9766-a1ddf8c4b3d9"),
                             Count = 12,
                             Description = "A delicious and refreshing lime beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Lime_A_Vertical-683x1024.jpg",
@@ -55,7 +57,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8b29336a-b992-417a-896d-271bef456530"),
+                            Id = new Guid("07a857ba-f46a-45e3-830e-1dbb6cac10c3"),
                             Count = 12,
                             Description = "A delicious and refreshing coconut beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Coconut_A_Vertical-683x1024.jpg",
@@ -63,7 +65,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("19cc3a54-4ca1-4eae-9e2d-a3d000922237"),
+                            Id = new Guid("d790acab-af1c-40e6-ac76-2f84b6e290dc"),
                             Count = 6,
                             Description = "A delicious and refreshing adult beverage.",
                             ImageUrl = "https://cdn.justwineapp.com/assets/beer/bottle/1st-republic-brewing-company-corona-light_1477953503.png",
@@ -71,7 +73,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2c78a69e-40ac-4229-b710-2e493bfca6e7"),
+                            Id = new Guid("c88497ab-60f2-4d8f-a621-343823a2806c"),
                             Count = 2,
                             Description = "The real MVP of the beach trip.",
                             ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71alXyECmDL._SL1500_.jpg",
@@ -170,7 +172,7 @@ namespace BeachBuddy.Migrations
                             LastName = "Marshall",
                             PhoneNumber = "7703557591",
                             PhotoUrl = "StaticFiles/images/andrew.jpeg",
-                            SkinType = 1
+                            SkinType = 0
                         },
                         new
                         {
@@ -179,7 +181,7 @@ namespace BeachBuddy.Migrations
                             LastName = "Brottman",
                             PhoneNumber = "8474945909",
                             PhotoUrl = "StaticFiles/images/lena.jpeg",
-                            SkinType = 2
+                            SkinType = 1
                         },
                         new
                         {
@@ -188,7 +190,7 @@ namespace BeachBuddy.Migrations
                             LastName = "French",
                             PhoneNumber = "6784691861‬",
                             PhotoUrl = "StaticFiles/images/clayton.jpeg",
-                            SkinType = 3
+                            SkinType = 2
                         },
                         new
                         {
@@ -197,7 +199,7 @@ namespace BeachBuddy.Migrations
                             LastName = "Moore",
                             PhoneNumber = "6782662654",
                             PhotoUrl = "StaticFiles/images/erica.jpeg",
-                            SkinType = 3
+                            SkinType = 2
                         },
                         new
                         {
@@ -206,7 +208,7 @@ namespace BeachBuddy.Migrations
                             LastName = "Elkourie",
                             PhoneNumber = "‭6782343314",
                             PhotoUrl = "StaticFiles/images/stephen.jpeg",
-                            SkinType = 5
+                            SkinType = 4
                         },
                         new
                         {
@@ -215,7 +217,7 @@ namespace BeachBuddy.Migrations
                             LastName = "Gibbs",
                             PhoneNumber = "2563935211‬",
                             PhotoUrl = "StaticFiles/images/lacey.jpeg",
-                            SkinType = 3
+                            SkinType = 2
                         });
                 });
 

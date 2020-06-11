@@ -1,5 +1,6 @@
 using System;
 using BeachBuddy.Entities;
+using BeachBuddy.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeachBuddy.DbContexts
@@ -22,37 +23,55 @@ namespace BeachBuddy.DbContexts
                 {
                     Id = Guid.Parse("d28888e9-2ba9-473a-a40f-e38cb54f9b35"),
                     FirstName = "Andrew",
-                    LastName = "Marshall"
+                    LastName = "Marshall",
+                    SkinType = SkinType.One,
+                    PhoneNumber = "7703557591",
+                    PhotoUrl = "StaticFiles/images/andrew.jpeg"
                 },
                 new User()
                 {
                     Id = Guid.Parse("da2fd609-d754-4feb-8acd-c4f9ff13ba96"),
                     FirstName = "Lena",
-                    LastName = "Brottman"
+                    LastName = "Brottman",
+                    SkinType = SkinType.Two,
+                    PhoneNumber = "8474945909",
+                    PhotoUrl = "StaticFiles/images/lena.jpeg"
                 },
                 new User()
                 {
                     Id = Guid.Parse("2902b665-1190-4c70-9915-b9c2d7680450"),
                     FirstName = "Clayton",
                     LastName = "French",
+                    SkinType = SkinType.Three,
+                    PhoneNumber = "6784691861‬",
+                    PhotoUrl = "StaticFiles/images/clayton.jpeg"
                 },
                 new User()
                 {
                     Id = Guid.Parse("102b566b-ba1f-404c-b2df-e2cde39ade09"),
                     FirstName = "Erica",
-                    LastName = "Moore"
+                    LastName = "Moore",
+                    SkinType = SkinType.Three,
+                    PhoneNumber = "6782662654",
+                    PhotoUrl = "StaticFiles/images/erica.jpeg"
                 },
                 new User()
                 {
                     Id = Guid.Parse("5b3621c0-7b12-4e80-9c8b-3398cba7ee05"),
                     FirstName = "Stephen",
-                    LastName = "Elkourie"
+                    LastName = "Elkourie",
+                    SkinType = SkinType.Five,
+                    PhoneNumber = "‭6782343314",
+                    PhotoUrl = "StaticFiles/images/stephen.jpeg"
                 },
                 new User()
                 {
                     Id = Guid.Parse("2aadd2df-7caf-45ab-9355-7f6332985a87"),
                     FirstName = "Lacey",
-                    LastName = "Gibbs"
+                    LastName = "Gibbs",
+                    SkinType = SkinType.Three,
+                    PhoneNumber = "2563935211‬",
+                    PhotoUrl = "StaticFiles/images/lacey.jpeg"
                 }
             );
 

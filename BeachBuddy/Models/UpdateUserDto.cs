@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using BeachBuddy.Enums;
 
 namespace BeachBuddy.Models
 {
@@ -11,9 +12,7 @@ namespace BeachBuddy.Models
         [Required]
         [MaxLength(50)]
         public string LastName { get; set; }
-
-        public int StarCount { get; set; }
         
-        public int KanJamWinCount { get; set; }
+        public SkinType SkinType { get; set; }
     }
 }
