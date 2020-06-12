@@ -22,7 +22,5 @@ namespace BeachBuddy.Models
         public string PhotoUrl { get; set; }
         
         public List<ScoreDto> Scores { get; set; }
-        
-        public List<RequestedItem> RequestedItems { get; set; }
     }
 }

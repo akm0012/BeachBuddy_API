@@ -31,6 +31,7 @@ namespace BeachBuddy.Repositories
         Task<bool> ScoreExists(Guid scoreId);
         
         Task<IEnumerable<RequestedItem>> GetRequestedItems();
+        Task<IEnumerable<RequestedItem>> GetRequestedItems(string nameQuery);
         Task<IEnumerable<RequestedItem>> GetNotCompletedRequestedItems();
         Task<RequestedItem> GetRequestedItem(Guid requestedItemId);
         Task AddRequestedItem(RequestedItem requestedItem);

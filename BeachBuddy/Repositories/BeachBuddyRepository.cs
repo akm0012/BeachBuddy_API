@@ -219,6 +219,13 @@ namespace BeachBuddy.Repositories
                 .OrderBy(r => r.CreatedDateTime).ToListAsync();
         }
 
+        public async Task<IEnumerable<RequestedItem>> GetRequestedItems(string nameQuery)
+        {
+            return await _context.RequestedItems
+                .Where(r => r.Name.Equals(nameQuery))
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<RequestedItem>> GetNotCompletedRequestedItems()
         {
             return await _context.RequestedItems
