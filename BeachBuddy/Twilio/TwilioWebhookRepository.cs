@@ -116,6 +116,11 @@ namespace BeachBuddy.Twilio
             
             var numItemsDeleted = 0;
             var itemsToDelete = await _beachBuddyRepository.GetRequestedItems(text);
+            if (nuke)
+            {
+                itemsToDelete = await _beachBuddyRepository.GetNotCompletedRequestedItems();
+            }
+            
             foreach (var item in itemsToDelete)
             {
                 _beachBuddyRepository.DeleteRequestedItem(item);
