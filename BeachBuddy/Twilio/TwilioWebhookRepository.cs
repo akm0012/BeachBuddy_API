@@ -152,11 +152,11 @@ namespace BeachBuddy.Twilio
 
         private async Task ShowHelp(string fromNumber, string toNumber)
         {
-            const string helpText = "You can send these commands:\n" +
+            const string helpText = "You can send these commands:\n\n" +
                                     "{quantity} {itemName} - Will add a new item. {quantity} is optional.\n\n" +
-                                    "remove {nameOfItem} - Will remove {nameOfItem} from the list name.\n\n" +
+                                    "remove {itemName} - Will remove {nameOfItem} from the list name.\n\n" +
                                     "list - Will show all the uncompleted items in the list.\n\n" +
-                                    "bal - Will show current Twilio balance." +
+                                    "bal - Will show current Twilio balance.\n\n" +
                                     "NukeFromOrbit - Will delete all items.";
 
             await _twilioService.SendSms(toNumber, fromNumber, $"{helpText.Trim()}");
