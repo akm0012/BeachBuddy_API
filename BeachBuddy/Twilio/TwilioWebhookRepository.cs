@@ -59,6 +59,10 @@ namespace BeachBuddy.Twilio
                 case "nukefromorbit":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage, true);
                     return;
+                
+                case "bal":
+                    await GetBalance(fromNumber, toNumber);
+                    return;
             }
 
             var requestedItemToSave = new RequestedItem();
@@ -152,9 +156,17 @@ namespace BeachBuddy.Twilio
                                     "{quantity} {itemName} - Will add a new item. {quantity} is optional.\n\n" +
                                     "remove {nameOfItem} - Will remove {nameOfItem} from the list name.\n\n" +
                                     "list - Will show all the uncompleted items in the list.\n\n" +
+                                    "bal - Will show current Twilio balance." +
                                     "NukeFromOrbit - Will delete all items.";
 
             await _twilioService.SendSms(toNumber, fromNumber, $"{helpText.Trim()}");
+        }
+
+        private async Task GetBalance(string fromNumber, string toNumber)
+        {
+            var account = await _twilioService.GetAccountBalance();
+            
+            await _twilioService.SendSms(toNumber, fromNumber, $"Current balance: ${account.Balance}");
         }
     }
 }

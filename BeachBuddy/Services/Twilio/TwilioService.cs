@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Twilio.Clients;
+using Twilio.Rest.Api.V2010;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
@@ -39,5 +40,22 @@ namespace BeachBuddy.Services.Twilio
                 return null;
             }
         }
+
+        public async Task<BalanceResource> GetAccountBalance()
+        {
+            try
+            {
+                return await BalanceResource.FetchAsync(new FetchBalanceOptions
+                {
+                    PathAccountSid = APIKeys.TwilioAccoutSid
+                } ,_client);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.InnerException?.Message);
+                return null;
+            }
+        }
+
     }
 }
