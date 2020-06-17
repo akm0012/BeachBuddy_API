@@ -47,6 +47,7 @@ namespace BeachBuddy.Controllers
             
             var itemToAdd = _mapper.Map<Entities.RequestedItem>(requestedItemDto);
             itemToAdd.CreatedDateTime = DateTimeOffset.UtcNow;
+            itemToAdd.CompletedDateTime = null;
             
             await _beachBuddyRepository.AddRequestedItem(itemToAdd);
             await _beachBuddyRepository.Save();
@@ -74,12 +75,20 @@ namespace BeachBuddy.Controllers
             {
                 updateItemDto.Count = itemToUpdate.Count;
             }
+
+            // Only set the completed time if it was previously not set
+            if (updateItemDto.IsRequestCompleted && !itemToUpdate.IsRequestCompleted)
+            {
+                itemToUpdate.CompletedDateTime = DateTimeOffset.UtcNow;
+            }
             
             _mapper.Map(updateItemDto, itemToUpdate);
             _beachBuddyRepository.UpdateRequestedItem(itemToUpdate);
             await _beachBuddyRepository.Save();
 
-            return NoContent();
+            var itemToReturn = _mapper.Map<RequestedItemDto>(itemToUpdate);
+
+            return Ok(itemToReturn);
         }
         
         [HttpDelete("{requestedItemId}")]

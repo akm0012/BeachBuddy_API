@@ -4,14 +4,16 @@ using BeachBuddy.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeachBuddy.Migrations
 {
     [DbContext(typeof(BeachBuddyContext))]
-    partial class BeachBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20200616223802_Added a field for RequestedItem.CompletedDateTime")]
+    partial class AddedafieldforRequestedItemCompletedDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace BeachBuddy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6cd8c9e1-1c85-4661-87cc-d54c33266ab1"),
+                            Id = new Guid("36725127-4bfa-4fb7-b9a5-58fcfadbb815"),
                             Count = 12,
                             Description = "A delicious and refreshing lime beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Lime_A_Vertical-683x1024.jpg",
@@ -55,7 +57,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c96f1a46-fc23-4f17-993e-0a5220ff92b1"),
+                            Id = new Guid("8623dbed-f857-423d-b05a-2e8bfb031ce9"),
                             Count = 12,
                             Description = "A delicious and refreshing coconut beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Coconut_A_Vertical-683x1024.jpg",
@@ -63,7 +65,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c9f2d015-cf16-4092-bd14-ddd591ff5298"),
+                            Id = new Guid("4b6267a9-b86a-4486-9a5e-1414f3c35d03"),
                             Count = 6,
                             Description = "A delicious and refreshing adult beverage.",
                             ImageUrl = "https://cdn.justwineapp.com/assets/beer/bottle/1st-republic-brewing-company-corona-light_1477953503.png",
@@ -71,7 +73,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c1d5d45c-40c3-416c-80e5-6e6068012280"),
+                            Id = new Guid("ea253037-8f58-47ca-9ab6-5383664a3752"),
                             Count = 2,
                             Description = "The real MVP of the beach trip.",
                             ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71alXyECmDL._SL1500_.jpg",
@@ -85,7 +87,7 @@ namespace BeachBuddy.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("CompletedDateTime")
+                    b.Property<DateTimeOffset>("CompletedDateTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Count")

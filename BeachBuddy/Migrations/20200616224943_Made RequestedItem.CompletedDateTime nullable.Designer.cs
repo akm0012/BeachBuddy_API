@@ -4,14 +4,16 @@ using BeachBuddy.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeachBuddy.Migrations
 {
     [DbContext(typeof(BeachBuddyContext))]
-    partial class BeachBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20200616224943_Made RequestedItem.CompletedDateTime nullable")]
+    partial class MadeRequestedItemCompletedDateTimenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -241,7 +241,9 @@ namespace BeachBuddy.Repositories
                 throw new ArgumentNullException(nameof(requestedItemId));
             }
 
-            return await _context.RequestedItems.FirstOrDefaultAsync(item => item.Id == requestedItemId);
+            return await _context.RequestedItems
+                .Include(item => item.RequestedByUser)
+                .FirstOrDefaultAsync(item => item.Id == requestedItemId);
         }
 
         public async Task AddRequestedItem(RequestedItem requestedItem)
