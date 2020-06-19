@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BeachBuddy.Enums;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.User
 {
     public class UpdateUserDto
     {

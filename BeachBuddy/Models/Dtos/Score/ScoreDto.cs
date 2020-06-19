@@ -1,6 +1,6 @@
 using System;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.Score
 {
     public class ScoreDto
     {

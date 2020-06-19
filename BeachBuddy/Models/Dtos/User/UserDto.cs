@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using BeachBuddy.Entities;
 using BeachBuddy.Enums;
+using BeachBuddy.Models.Dtos.Score;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.User
 {
     public class UserDto
     {

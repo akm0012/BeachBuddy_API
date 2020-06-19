@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.Item
 {
     public class UpdateItemDto : ManipulateItemDto
     {

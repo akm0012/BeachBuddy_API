@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos
 {
     public class OpenWeatherDto
     {

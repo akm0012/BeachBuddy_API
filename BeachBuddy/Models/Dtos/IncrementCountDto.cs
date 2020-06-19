@@ -1,6 +1,6 @@
 using BeachBuddy.ValidationAttributes;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos
 {
     [IncrementCountFieldChecker]
     public class IncrementCountDto

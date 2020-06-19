@@ -1,4 +1,5 @@
 using AutoMapper;
+using BeachBuddy.Models.Dtos.RequestedItem;
 
 namespace BeachBuddy.Profiles
 {
@@ -6,11 +7,11 @@ namespace BeachBuddy.Profiles
     {
         public RequestedItemProfile()
         {
-            CreateMap<Entities.RequestedItem, Models.RequestedItemDto>();
+            CreateMap<Entities.RequestedItem, RequestedItemDto>();
             
-            CreateMap<Models.AddRequestedItemDto, Entities.RequestedItem>();
+            CreateMap<AddRequestedItemDto, Entities.RequestedItem>();
             
-            CreateMap<Models.UpdateRequestedItemDto, Entities.RequestedItem>();
+            CreateMap<UpdateRequestedItemDto, Entities.RequestedItem>();
         }
     }
 }

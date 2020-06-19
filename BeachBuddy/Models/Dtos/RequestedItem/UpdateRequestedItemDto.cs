@@ -1,4 +1,4 @@
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.RequestedItem
 {
     public class UpdateRequestedItemDto
     {

@@ -1,6 +1,7 @@
 using System;
+using BeachBuddy.Models.Dtos.User;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.RequestedItem
 {
     public class RequestedItemDto
     {

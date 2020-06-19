@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using BeachBuddy.Models;
+using BeachBuddy.Models.Dtos;
 
 namespace BeachBuddy.ValidationAttributes
 {

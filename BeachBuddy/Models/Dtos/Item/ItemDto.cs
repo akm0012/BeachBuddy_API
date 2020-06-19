@@ -1,6 +1,6 @@
 using System;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.Item
 {
     public class ItemDto
     {

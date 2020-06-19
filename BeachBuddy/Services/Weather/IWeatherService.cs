@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using BeachBuddy.Models;
+using BeachBuddy.Models.Dtos;
 
 namespace BeachBuddy.Services.Weather
 {

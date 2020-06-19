@@ -1,7 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
+using BeachBuddy.Models.Dtos.Item;
+using BeachBuddy.Models.Dtos.User;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos
 {
     public class DashboardDto
     {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.Entities;
 using BeachBuddy.Models;
+using BeachBuddy.Models.Dtos.User;
 using BeachBuddy.Repositories;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,6 @@
 using AutoMapper;
 using BeachBuddy.Entities;
+using BeachBuddy.Models.Dtos.Device;
 
 namespace BeachBuddy.Profiles
 {
@@ -8,7 +9,7 @@ namespace BeachBuddy.Profiles
 
         public DeviceProfile()
         {
-            CreateMap<Models.AddDeviceDto, Entities.Device>();
+            CreateMap<AddDeviceDto, Entities.Device>();
         }
     }
 }

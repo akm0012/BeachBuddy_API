@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using BeachBuddy.Enums;
 using BeachBuddy.Models;
+using BeachBuddy.Models.Dtos;
 using BeachBuddy.Services.Weather;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

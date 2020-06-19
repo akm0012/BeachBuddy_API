@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos
 {
     public class VisitBeachesDto
     {

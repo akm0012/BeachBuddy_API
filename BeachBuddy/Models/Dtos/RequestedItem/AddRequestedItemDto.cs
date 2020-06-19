@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.RequestedItem
 {
     public class AddRequestedItemDto
     {

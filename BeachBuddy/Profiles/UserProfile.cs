@@ -1,4 +1,5 @@
 using AutoMapper;
+using BeachBuddy.Models.Dtos.User;
 
 namespace BeachBuddy.Profiles
 {
@@ -6,13 +7,13 @@ namespace BeachBuddy.Profiles
     {
         public UserProfile()
         {
-            CreateMap<Entities.User, Models.UserDto>()
+            CreateMap<Entities.User, UserDto>()
                 .ForMember(
                     dest => dest.FullName,
                     memberOptions
                         => memberOptions.MapFrom(src => $"{src.FirstName} {src.LastName}"));
 
-            CreateMap<Models.UpdateUserDto, Entities.User>();
+            CreateMap<UpdateUserDto, Entities.User>();
         }
     }
 }

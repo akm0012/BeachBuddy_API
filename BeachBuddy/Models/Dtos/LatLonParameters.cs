@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BeachBuddy.ValidationAttributes;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos
 {
     [LatLonValidation]
     public class LatLonParameters

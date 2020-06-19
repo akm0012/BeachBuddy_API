@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BeachBuddy.Models
+namespace BeachBuddy.Models.Dtos.Score
 {
     public class UpdateScoreDto
     {

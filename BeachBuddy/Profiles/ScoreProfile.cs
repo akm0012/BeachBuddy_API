@@ -1,4 +1,5 @@
 using AutoMapper;
+using BeachBuddy.Models.Dtos.Score;
 
 namespace BeachBuddy.Profiles
 {
@@ -6,9 +7,9 @@ namespace BeachBuddy.Profiles
     {
         public ScoreProfile()
         {
-            CreateMap<Entities.Score, Models.ScoreDto>();
+            CreateMap<Entities.Score, ScoreDto>();
             
-            CreateMap<Models.UpdateScoreDto, Entities.Score>();
+            CreateMap<UpdateScoreDto, Entities.Score>();
         }
     }
 }
