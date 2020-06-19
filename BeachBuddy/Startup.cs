@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.DbContexts;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services.Notification;
 using BeachBuddy.Services.Twilio;
 using BeachBuddy.Services.Weather;
 using BeachBuddy.Twilio;
+using FirebaseAdmin;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +43,8 @@ namespace BeachBuddy
         {
             services.AddControllers();
 
+            FirebaseApp.Create();
+            
             // Library used to map objects to DTOs
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -51,6 +55,7 @@ namespace BeachBuddy
 
             services.AddScoped<ITwilioService, TwilioService>();
             services.AddScoped<IWeatherService, OpenWeatherMapService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             services.AddHttpClient();
 

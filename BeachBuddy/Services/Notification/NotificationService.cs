@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,21 +23,38 @@ namespace BeachBuddy.Services.Notification
         public async Task sendNotification(RequestedItem requestedItem, string notificationTitle,
             string notificationMessage, bool dataOnly)
         {
-            var devices = new List<Device>();
+            var devices = await _beachBuddyRepository.GetDevices();
 
-            var data = new Dictionary<string, string>
+            Dictionary<string, string> data;
+            
+            if (dataOnly)
             {
-                {"myFirstDataField", "Hello World!"}
-            };
+                data = new Dictionary<string, string>
+                {
+                    {"updateOnly", "true"}
+                };  
+            }
+            else
+            {
+                data = new Dictionary<string, string>
+                {
+                    {"updateOnly", "false"},
+                    {"name", $"{requestedItem.Name}"},
+                    {"count", $"{requestedItem.Count}"},
+                    {"sentByUserId", $"{requestedItem.RequestedByUserId}"}
+                };                
+            }
 
-            var results = await SendFcmNotification(devices, notificationTitle, notificationMessage, dataOnly, data);
+            var deviceList = devices.ToList();
+            var results = await SendFcmNotification(deviceList, notificationTitle, notificationMessage, dataOnly, data);
 
             for (var i = 0; i < results.Count; i++)
             {
                 var response = results[i];
-                var device = devices[i];
+                var device = deviceList[i];
                 if (response.IsSuccess)
                 {
+                    _logger.LogDebug($"Message was sent!");
                     // Woohoo!
                 }
                 else
@@ -55,7 +73,7 @@ namespace BeachBuddy.Services.Notification
             }
         }
 
-        private async Task<IReadOnlyList<SendResponse>> SendFcmNotification(List<Device> devices,
+        private async Task<IReadOnlyList<SendResponse>> SendFcmNotification(IReadOnlyCollection<Device> devices,
             string notificationTitle, string notificationMessage, bool dataOnly,
             IReadOnlyDictionary<string, string> data)
         {
@@ -74,7 +92,16 @@ namespace BeachBuddy.Services.Notification
 
                 if (!dataOnly)
                 {
-                    firebaseMessage.Apns = new ApnsConfig {Aps = new Aps {Sound = "default"}};
+                    firebaseMessage.Apns = new ApnsConfig {Aps = new Aps {Sound = "seagulls"}}; // This sound does not work on Android
+                    firebaseMessage.Android = new AndroidConfig
+                    {
+                        TimeToLive = new TimeSpan(12,0, 0),
+                        Notification = new AndroidNotification
+                        {
+                            ChannelId = "RequestedItemsChannel",
+                            Sound = "seagulls.mp3"
+                        }
+                    };
                     firebaseMessage.Notification = new FirebaseAdmin.Messaging.Notification
                     {
                         Title = notificationTitle,

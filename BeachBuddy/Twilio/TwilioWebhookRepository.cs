@@ -6,6 +6,7 @@ using BeachBuddy.Entities;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Files;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services.Notification;
 using BeachBuddy.Services.Twilio;
 using BeachBuddy.Services.Weather;
 using Microsoft.Extensions.Logging;
@@ -17,13 +18,16 @@ namespace BeachBuddy.Twilio
         private readonly ILogger<TwilioWebhookRepository> _logger;
         private readonly IBeachBuddyRepository _beachBuddyRepository;
         private readonly ITwilioService _twilioService;
+        private readonly INotificationService _notificationService;
 
         public TwilioWebhookRepository(ILogger<TwilioWebhookRepository> logger,
-            IBeachBuddyRepository beachBuddyRepository, ITwilioService twilioService)
+            IBeachBuddyRepository beachBuddyRepository, ITwilioService twilioService,
+            INotificationService notificationService)
         {
             _logger = logger;
             _beachBuddyRepository = beachBuddyRepository;
             _twilioService = twilioService;
+            _notificationService = notificationService;
         }
 
         public async Task MessageReceived(string fromNumber, string toNumber, string text, List<RemoteFile> files)
@@ -46,6 +50,8 @@ namespace BeachBuddy.Twilio
             {
                 case "remove":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage);
+                    // Send data notification so app will update
+                    await _notificationService.sendNotification(null, null, null, true);
                     return;
 
                 case "list":
@@ -55,11 +61,13 @@ namespace BeachBuddy.Twilio
                 case "h":
                     await ShowHelp(fromNumber, toNumber);
                     return;
-                
+
                 case "nukefromorbit":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage, true);
+                    // Send data notification so app will update
+                    await _notificationService.sendNotification(null, null, null, true);
                     return;
-                
+
                 case "bal":
                     await GetBalance(fromNumber, toNumber);
                     return;
@@ -105,26 +113,34 @@ namespace BeachBuddy.Twilio
                 return;
             }
 
+            await _notificationService.sendNotification(
+                await _beachBuddyRepository.GetRequestedItem(requestedItemToSave.Id),
+                $"\"{requestedItemToSave.Name}\" added to list", $"{userWhoSentMessage.FirstName} " +
+                                                                $"added {requestedItemToSave.Count} {requestedItemToSave.Name} to the Beach List.",
+                false);
+
             await _twilioService.SendSms(toNumber, fromNumber, $"\"{text}\" was added to the list!");
         }
 
-        private async Task RemoveItems(string fromNumber, string toNumber, string text, string firstWordOfMessage, bool nuke = false)
+        private async Task RemoveItems(string fromNumber, string toNumber, string text, string firstWordOfMessage,
+            bool nuke = false)
         {
             text = text.Substring(firstWordOfMessage.Length).Trim();
 
             if (string.IsNullOrWhiteSpace(text) && !nuke)
             {
-                await _twilioService.SendSms(toNumber, fromNumber, $"Nothing was removed. If you want to remove everything send, \"NukeFromOrbit\"");
+                await _twilioService.SendSms(toNumber, fromNumber,
+                    $"Nothing was removed. If you want to remove everything send, \"NukeFromOrbit\"");
                 return;
             }
-            
+
             var numItemsDeleted = 0;
             var itemsToDelete = await _beachBuddyRepository.GetRequestedItems(text);
             if (nuke)
             {
                 itemsToDelete = await _beachBuddyRepository.GetNotCompletedRequestedItems();
             }
-            
+
             foreach (var item in itemsToDelete)
             {
                 _beachBuddyRepository.DeleteRequestedItem(item);
@@ -146,7 +162,7 @@ namespace BeachBuddy.Twilio
             {
                 namesOfOutstandingItems = "(empty list)";
             }
-            
+
             await _twilioService.SendSms(toNumber, fromNumber, $"{namesOfOutstandingItems.Trim()}");
         }
 
@@ -165,7 +181,7 @@ namespace BeachBuddy.Twilio
         private async Task GetBalance(string fromNumber, string toNumber)
         {
             var account = await _twilioService.GetAccountBalance();
-            
+
             await _twilioService.SendSms(toNumber, fromNumber, $"Current balance: ${account.Balance}");
         }
     }
