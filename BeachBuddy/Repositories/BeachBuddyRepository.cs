@@ -311,6 +311,16 @@ namespace BeachBuddy.Repositories
             await _context.Devices.AddAsync(device);
         }
 
+        public void UpdateDevice(Device device)
+        {
+            if (device == null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            _context.Devices.Update(device);
+        }
+
         public void DeleteDevice(Device device)
         {
             if (device == null)

@@ -8,7 +8,5 @@ namespace BeachBuddy.Entities
     {
         [Key]
         public string DeviceToken { get; set; }
-        
-        public DeviceType DeviceType { get; set; }
     }
 }

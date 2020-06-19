@@ -24,9 +24,9 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RequestedItemDto>>> GetRequestedItems()
+        public async Task<ActionResult<IEnumerable<DeviceDto>>> GetRequestedItems()
         {
-            return Ok(_mapper.Map<IEnumerable<RequestedItemDto>>(await _beachBuddyRepository.GetRequestedItems()));
+            return Ok(_mapper.Map<IEnumerable<DeviceDto>>(await _beachBuddyRepository.GetDevices()));
         }
         
         [HttpPost]
@@ -34,8 +34,11 @@ namespace BeachBuddy.Controllers
         {
             var itemToAdd = _mapper.Map<Device>(addDeviceDto);
 
-            await _beachBuddyRepository.AddDevice(itemToAdd);
-            await _beachBuddyRepository.Save();
+            if (await _beachBuddyRepository.GetDevice(itemToAdd.DeviceToken) == null)
+            {
+                await _beachBuddyRepository.AddDevice(itemToAdd);
+                await _beachBuddyRepository.Save();
+            }
 
             return NoContent();
         }

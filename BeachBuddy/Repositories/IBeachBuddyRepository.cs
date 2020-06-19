@@ -42,6 +42,7 @@ namespace BeachBuddy.Repositories
         Task<IEnumerable<Device>> GetDevices();
         Task<Device> GetDevice(string deviceToken);
         Task AddDevice(Device device);
+        void UpdateDevice(Device device);
         void DeleteDevice(Device device);
         
         Task<bool> Save();

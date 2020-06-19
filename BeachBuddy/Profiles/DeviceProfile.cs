@@ -6,10 +6,11 @@ namespace BeachBuddy.Profiles
 {
     public class DeviceProfile : Profile
     {
-
         public DeviceProfile()
         {
-            CreateMap<AddDeviceDto, Entities.Device>();
+            CreateMap<AddDeviceDto, Device>();
+ 
+            CreateMap<Device, DeviceDto>();
         }
     }
 }
