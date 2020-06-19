@@ -286,6 +286,41 @@ namespace BeachBuddy.Repositories
             return await _context.RequestedItems.AnyAsync(item => item.Id == requestedItemId);
         }
 
+        public async Task<IEnumerable<Device>> GetDevices()
+        {
+            return await _context.Devices.ToListAsync();
+        }
+
+        public async Task<Device> GetDevice(string deviceToken)
+        {
+            if (deviceToken == null)
+            {
+                throw new ArgumentNullException(nameof(deviceToken));
+            }
+
+            return await _context.Devices.FirstOrDefaultAsync(d => d.DeviceToken == deviceToken);
+        }
+
+        public async Task AddDevice(Device device)
+        {
+            if (device == null)
+            {
+                throw new ArgumentNullException(nameof(Device));
+            }
+
+            await _context.Devices.AddAsync(device);
+        }
+
+        public void DeleteDevice(Device device)
+        {
+            if (device == null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            _context.Devices.Remove(device);
+        }
+
         public async Task<bool> Save()
         {
             return await _context.SaveChangesAsync() >= 0;

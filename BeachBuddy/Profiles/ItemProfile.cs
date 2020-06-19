@@ -1,4 +1,5 @@
 using AutoMapper;
+using BeachBuddy.Models.Item;
 
 namespace BeachBuddy.Profiles
 {
@@ -8,7 +9,7 @@ namespace BeachBuddy.Profiles
         {
             CreateMap<Entities.Item, Models.ItemDto>();
             
-            CreateMap<Models.AddItemDto, Entities.Item>();
+            CreateMap<AddItemDto, Entities.Item>();
             
             CreateMap<Models.UpdateItemDto, Entities.Item>();
         }

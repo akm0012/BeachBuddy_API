@@ -39,6 +39,11 @@ namespace BeachBuddy.Repositories
         void DeleteRequestedItem(RequestedItem requestedItem);
         Task<bool> RequestedItemExists(Guid requestedItemId);
         
+        Task<IEnumerable<Device>> GetDevices();
+        Task<Device> GetDevice(string deviceToken);
+        Task AddDevice(Device device);
+        void DeleteDevice(Device device);
+        
         Task<bool> Save();
     }
 }

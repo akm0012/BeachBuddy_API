@@ -4,33 +4,22 @@ using BeachBuddy.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BeachBuddy.Migrations
 {
     [DbContext(typeof(BeachBuddyContext))]
-    partial class BeachBuddyContextModelSnapshot : ModelSnapshot
+    [Migration("20200619011610_Added Device Entity")]
+    partial class AddedDeviceEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("BeachBuddy.Entities.Device", b =>
-                {
-                    b.Property<string>("DeviceToken")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DeviceType")
-                        .HasColumnType("int");
-
-                    b.HasKey("DeviceToken");
-
-                    b.ToTable("Devices");
-                });
 
             modelBuilder.Entity("BeachBuddy.Entities.Item", b =>
                 {
@@ -60,7 +49,7 @@ namespace BeachBuddy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d7644fce-b81c-453f-b498-798e0c77108f"),
+                            Id = new Guid("66657da6-d35d-40f6-8d08-476417e0e1f2"),
                             Count = 12,
                             Description = "A delicious and refreshing lime beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Lime_A_Vertical-683x1024.jpg",
@@ -68,7 +57,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6c8c87dd-af96-40ba-9461-6e72ff700ed0"),
+                            Id = new Guid("2127960c-7fc5-4a16-ac59-8777a24d6e60"),
                             Count = 12,
                             Description = "A delicious and refreshing coconut beverage.",
                             ImageUrl = "https://www.lacroixwater.com/wp-content/uploads/2019/01/LaCroix_Can-Flavors_Coconut_A_Vertical-683x1024.jpg",
@@ -76,7 +65,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("aa9d5336-3dfb-4026-a6d1-2e416bb330db"),
+                            Id = new Guid("56e2425a-43b1-4437-b7e1-c323aaec20e4"),
                             Count = 6,
                             Description = "A delicious and refreshing adult beverage.",
                             ImageUrl = "https://cdn.justwineapp.com/assets/beer/bottle/1st-republic-brewing-company-corona-light_1477953503.png",
@@ -84,7 +73,7 @@ namespace BeachBuddy.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7ae25380-204a-461d-9f94-0d957c17f5d7"),
+                            Id = new Guid("86a34d9a-992c-45dc-865c-7a62a72bdbfa"),
                             Count = 2,
                             Description = "The real MVP of the beach trip.",
                             ImageUrl = "https://images-na.ssl-images-amazon.com/images/I/71alXyECmDL._SL1500_.jpg",
