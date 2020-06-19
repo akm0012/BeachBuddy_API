@@ -99,7 +99,7 @@ namespace BeachBuddy.Services.Notification
                         Notification = new AndroidNotification
                         {
                             ChannelId = "RequestedItemsChannel",
-                            Sound = "seagulls.mp3"
+                            Sound = "seagulls"
                         }
                     };
                     firebaseMessage.Notification = new FirebaseAdmin.Messaging.Notification
