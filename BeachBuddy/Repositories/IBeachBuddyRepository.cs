@@ -25,6 +25,7 @@ namespace BeachBuddy.Repositories
         
         Task<IEnumerable<Score>> GetScores();
         Task<Score> GetScore(Guid scoreId);
+        Task<Score> GetScore(Guid userId, string gameName);
         Task AddScore(Score score);
         void UpdateScore(Score score);
         void DeleteScore(Score score);

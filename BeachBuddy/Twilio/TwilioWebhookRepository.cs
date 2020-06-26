@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BeachBuddy.Entities;
 using BeachBuddy.Models;
@@ -32,6 +33,8 @@ namespace BeachBuddy.Twilio
 
         public async Task MessageReceived(string fromNumber, string toNumber, string text, List<RemoteFile> files)
         {
+            _logger.LogInformation($"New Incoming SMS from {fromNumber}: {text}");
+
             var users = await _beachBuddyRepository.GetUsers(new UserResourceParameters()
             {
                 PhoneNumber = fromNumber
@@ -44,7 +47,21 @@ namespace BeachBuddy.Twilio
                 return;
             }
 
-            var firstWordOfMessage = text.Split(" ")[0];
+            var words = text.Split(" ");
+            var firstWordOfMessage = words[0].ToLower();
+
+            var firstChar = firstWordOfMessage.ToCharArray()[0];
+            if (firstChar == '+' || firstChar == '-')
+            {
+                await ProcessScoreUpdate(text, userWhoSentMessage, fromNumber, toNumber);
+                return;
+            }
+
+            string secondWordOfMessage = null;
+            if (words.Length >= 2)
+            {
+                secondWordOfMessage = text.Split(" ")[1].ToLower();
+            }
 
             switch (firstWordOfMessage.ToLower())
             {
@@ -70,6 +87,20 @@ namespace BeachBuddy.Twilio
 
                 case "bal":
                     await GetBalance(fromNumber, toNumber);
+                    return;
+
+                case "add":
+                    if (secondWordOfMessage != null && secondWordOfMessage == "game")
+                    {
+                        var gameName = text.Substring("add game".Length).Trim();
+                        await AddGame(gameName, fromNumber, toNumber);
+                        return;
+                    }
+
+                    break;
+
+                case "leaderboard":
+                    await ShowLeaderBoard(fromNumber, toNumber);
                     return;
             }
 
@@ -116,7 +147,7 @@ namespace BeachBuddy.Twilio
             await _notificationService.sendNotification(
                 await _beachBuddyRepository.GetRequestedItem(requestedItemToSave.Id),
                 $"\"{requestedItemToSave.Name}\" added to list", $"{userWhoSentMessage.FirstName} " +
-                                                                $"added {requestedItemToSave.Count} {requestedItemToSave.Name} to the Beach List.",
+                                                                 $"added {requestedItemToSave.Count} {requestedItemToSave.Name} to the Beach List.",
                 false);
 
             await _twilioService.SendSms(toNumber, fromNumber, $"\"{text}\" was added to the list!");
@@ -172,8 +203,11 @@ namespace BeachBuddy.Twilio
                                     "{quantity} {itemName} - Will add a new item. {quantity} is optional.\n\n" +
                                     "remove {itemName} - Will remove {nameOfItem} from the list name.\n\n" +
                                     "list - Will show all the uncompleted items in the list.\n\n" +
+                                    "add game {gameName} - Will add a new game.\n\n" +
+                                    "leaderboard - Will show all the scores.\n\n" +
+                                    "+1 {userName} {gameName} - Will increment your score. {userName} is optional.\n\n" +
                                     "bal - Will show current Twilio balance.\n\n" +
-                                    "NukeFromOrbit - Will delete all items.";
+                                    "NukeFromOrbit - Will delete all beach list items.";
 
             await _twilioService.SendSms(toNumber, fromNumber, $"{helpText.Trim()}");
         }
@@ -183,6 +217,150 @@ namespace BeachBuddy.Twilio
             var account = await _twilioService.GetAccountBalance();
 
             await _twilioService.SendSms(toNumber, fromNumber, $"Current balance: ${account.Balance}");
+        }
+
+        private async Task ShowLeaderBoard(string fromNumber, string toNumber)
+        {
+            var users = await _beachBuddyRepository.GetUsers();
+
+            var sb = new StringBuilder();
+
+            foreach (var user in users)
+            {
+                sb.Append(user.FirstName);
+
+                var userScores = user.Scores.OrderBy(x => x.Name).ToList();
+                foreach (var score in userScores)
+                {
+                    sb.Append($"\n{score.Name} ({score.WinCount})");
+                }
+
+                sb.Append("\n\n");
+            }
+
+            var textToSend = sb.ToString().Trim();
+
+            await _twilioService.SendSms(toNumber, fromNumber, textToSend);
+        }
+
+        private async Task AddGame(string gameName, string fromNumber, string toNumber)
+        {
+            if (string.IsNullOrWhiteSpace(gameName))
+            {
+                await _twilioService.SendSms(toNumber, fromNumber,
+                    $"The game name can not be empty.");
+                return;
+            }
+
+            if (gameName.Length > 15)
+            {
+                await _twilioService.SendSms(toNumber, fromNumber,
+                    "The game name can not be longer than 15 characters.");
+                return;
+            }
+
+            var users = await _beachBuddyRepository.GetUsers();
+
+            foreach (var user in users)
+            {
+                var scoreToAdd = new Score()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = gameName,
+                    UserId = user.Id,
+                    WinCount = 0,
+                    User = user
+                };
+
+                user.Scores.Add(scoreToAdd);
+
+                _beachBuddyRepository.UpdateUser(user);
+                await _beachBuddyRepository.AddScore(scoreToAdd);
+            }
+
+            await _beachBuddyRepository.Save();
+
+            await _twilioService.SendSms(toNumber, fromNumber,
+                $"{gameName} was added! If you play outside, don't forget sunscreen!");
+        }
+
+        private async Task ProcessScoreUpdate(String text,
+            User userWhoSentMessage,
+            string fromNumber,
+            string toNumber)
+        {
+            var words = text.Split(" ");
+            if (words.Length < 2)
+            {
+                await _twilioService.SendSms(toNumber, fromNumber,
+                    "I'm not sure what game you are referring to... Send 'h' for help.");
+                return;
+            }
+
+            var firstWordOfMessage = words[0].ToLower();
+            var firstChar = firstWordOfMessage.ToCharArray()[0];
+
+            var secondWordOfMessage = text.Split(" ")[1].ToLower();
+
+            var userWhoseScoreToManipulate = userWhoSentMessage;
+            
+            var gameName = text.Substring(firstWordOfMessage.Length).Trim();
+            
+            var users = await _beachBuddyRepository.GetUsers(new UserResourceParameters()
+            {
+                Name = secondWordOfMessage
+            });
+
+            var userMentionedInMessage = users.FirstOrDefault();
+            if (userMentionedInMessage != null)
+            {
+                userWhoseScoreToManipulate = userMentionedInMessage;
+                
+                // We need to recalculate the Game Name so we can take out the Users name
+                gameName = text.Substring(firstWordOfMessage.Length + " ".Length + secondWordOfMessage.Length).Trim();
+            }
+
+            var scoreToEdit = await _beachBuddyRepository.GetScore(userWhoseScoreToManipulate.Id, gameName);
+            if (scoreToEdit == null)
+            {
+                await _twilioService.SendSms(toNumber, fromNumber,
+                    $"Sorry, I could not find the game, {gameName}. You may need to add it first. Send 'h' for help.");
+                return;
+            }
+
+            switch (firstChar)
+            {
+                case '+':
+                {
+                    Double.TryParse(firstWordOfMessage, out var scoreChange);
+
+                    scoreToEdit.WinCount += Convert.ToInt32(scoreChange);
+                    break;
+                }
+                case '-':
+                {
+                    Double.TryParse(firstWordOfMessage, out var score);
+                    var scoreChange = Math.Abs(score);
+
+                    var winCount = Convert.ToInt32(scoreChange);
+
+                    if (winCount <= 0)
+                    {
+                        await _twilioService.SendSms(toNumber, fromNumber,
+                            $"{userWhoseScoreToManipulate.FirstName} already has 0 wins in {gameName}");
+                        return;
+                    }
+                
+                    scoreToEdit.WinCount -= winCount;
+                    break;
+                }
+            }
+            
+            _beachBuddyRepository.UpdateScore(scoreToEdit);
+            await _beachBuddyRepository.Save();
+            
+            await _twilioService.SendSms(toNumber, fromNumber,
+                $"{userWhoseScoreToManipulate.FirstName} now has {scoreToEdit.WinCount} win(s) in {gameName}!");
         }
     }
 }

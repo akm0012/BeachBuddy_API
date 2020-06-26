@@ -17,7 +17,7 @@ namespace BeachBuddy.Repositories
         {
             _context = buddyContext ?? throw new ArgumentNullException(nameof(buddyContext));
         }
-        
+
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _context.Users
@@ -79,7 +79,7 @@ namespace BeachBuddy.Repositories
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            
+
             _context.Users.Update(user);
         }
 
@@ -89,6 +89,7 @@ namespace BeachBuddy.Repositories
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
             _context.Users.Remove(user);
         }
 
@@ -170,6 +171,17 @@ namespace BeachBuddy.Repositories
             }
 
             return await _context.Scores.FirstOrDefaultAsync(score => score.Id == scoreId);
+        }
+
+        public async Task<Score> GetScore(Guid userId, string gameName)
+        {
+            if (string.IsNullOrWhiteSpace(gameName))
+            {
+                throw new ArgumentNullException(nameof(gameName));
+            }
+
+            return await _context.Scores.FirstOrDefaultAsync(score => score.Name == gameName
+                                                                      && score.UserId == userId);
         }
 
         public async Task AddScore(Score score)
@@ -341,7 +353,7 @@ namespace BeachBuddy.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
