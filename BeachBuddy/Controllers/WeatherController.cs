@@ -39,5 +39,12 @@ namespace BeachBuddy.Controllers
         {
             return Ok(skinType.GetSafeExposureTime(uvIndex, spf));
         }
+        
+        [HttpGet("currentUV")]
+        public async Task<ActionResult<OpenWeatherDto>> GetCurrentUVForLatLong(
+            [FromQuery] LatLonParameters latLonParameters)
+        {
+            return Ok(await _weatherService.GetCurrentUVIndex(latLonParameters));
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace BeachBuddy.Models.Dtos
 
         public Current current { get; set; }
 
-        public IEnumerable<MinuteForecast> minutely { get; set; }
+        // public IEnumerable<MinuteForecast> minutely { get; set; }
 
         public IEnumerable<HourlyWeatherForecast> hourly { get; set; }
         
@@ -38,6 +38,8 @@ namespace BeachBuddy.Models.Dtos
         public int clouds { get; set; }
 
         public double wind_speed { get; set; }
+        
+        public double wind_deg { get; set; }
 
         public double wind_gust { get; set; }
 

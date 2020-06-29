@@ -8,9 +8,9 @@ namespace BeachBuddy.Models.Dtos
     {
         public IEnumerable<UserDto> Users { get; set; }
         
-        public IEnumerable<ItemDto> Items { get; set; }
-
         public VisitBeachesDto BeachConditions { get; set; }
+        
+        public DashboardUVDto DashboardUvDto { get; set; }
         
         public OpenWeatherDto WeatherInfo { get; set; }
     }

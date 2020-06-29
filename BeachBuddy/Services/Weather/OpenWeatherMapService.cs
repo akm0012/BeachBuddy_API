@@ -42,7 +42,29 @@ namespace BeachBuddy.Services.Weather
                 PropertyNameCaseInsensitive = true,
             });
             return weatherDto;
+        }
 
+        public async Task<OpenUVDto> GetCurrentUVIndex(LatLonParameters latLngParameters)
+        {
+            var lat = latLngParameters.Lat;
+            var lon = latLngParameters.Lon;
+            
+            var requestUri = $"https://api.openuv.io/api/v1/uv?lat={lat}&lng={lon}";
+            
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            request.Headers.Add("x-access-token", APIKeys.OpenUVIndexApiKey);
+            
+            var client = _clientFactory.CreateClient();
+
+            var response = await client.SendAsync(request);
+            if (!response.IsSuccessStatusCode) return null;
+            await using var responseStream = await response.Content.ReadAsStreamAsync();
+            
+            var openUvDto = await JsonSerializer.DeserializeAsync<OpenUVDto>(responseStream, new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+            return openUvDto;
         }
 
         public async Task<VisitBeachesDto> GetBeachConditions()

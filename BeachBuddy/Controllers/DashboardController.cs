@@ -40,16 +40,15 @@ namespace BeachBuddy.Controllers
         public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] LatLonParameters latLonParameters)
         {
             var beachConditions = await _weatherService.GetBeachConditions();
+            var uvDto = await _weatherService.GetCurrentUVIndex(latLonParameters);
             var weatherData = await _weatherService.GetWeather(latLonParameters);
             var usersFromRepo = await _beachBuddyRepository.GetUsers();
-            var itemsFromRepo = await _beachBuddyRepository.GetItems();
-
             var dashboardDto = new DashboardDto
             {
                 BeachConditions = beachConditions,
+                DashboardUvDto =  _mapper.Map<DashboardUVDto>(uvDto),
                 WeatherInfo = weatherData,
                 Users = _mapper.Map<IEnumerable<UserDto>>(usersFromRepo),
-                Items = _mapper.Map<IEnumerable<ItemDto>>(itemsFromRepo)
             };
 
             return Ok(dashboardDto);
