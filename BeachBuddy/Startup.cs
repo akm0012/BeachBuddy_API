@@ -57,6 +57,8 @@ namespace BeachBuddy
             services.AddScoped<IWeatherService, OpenWeatherMapService>();
             services.AddScoped<INotificationService, NotificationService>();
 
+            services.AddMemoryCache();
+            
             services.AddHttpClient();
 
             services.AddDbContext<BeachBuddyContext>(options =>

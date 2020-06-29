@@ -22,11 +22,11 @@ namespace BeachBuddy.Models.Dtos
 
     public class SafeExposureTimeDto
     {
-        public IntegerType st1 { get; set; }
-        public IntegerType st2 { get; set; }
-        public IntegerType st3 { get; set; }
-        public IntegerType st4 { get; set; }
-        public IntegerType st5 { get; set; }
-        public IntegerType st6 { get; set; }
+        public int? st1 { get; set; }
+        public int? st2 { get; set; }
+        public int? st3 { get; set; }
+        public int? st4 { get; set; }
+        public int? st5 { get; set; }
+        public int? st6 { get; set; }
     }
 }

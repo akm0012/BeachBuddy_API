@@ -40,13 +40,32 @@ namespace BeachBuddy.Controllers
         public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] LatLonParameters latLonParameters)
         {
             var beachConditions = await _weatherService.GetBeachConditions();
+            
+            // todo: Un comment when go live
             var uvDto = await _weatherService.GetCurrentUVIndex(latLonParameters);
+            
             var weatherData = await _weatherService.GetWeather(latLonParameters);
             var usersFromRepo = await _beachBuddyRepository.GetUsers();
             var dashboardDto = new DashboardDto
             {
                 BeachConditions = beachConditions,
                 DashboardUvDto =  _mapper.Map<DashboardUVDto>(uvDto),
+                // DashboardUvDto = new DashboardUVDto
+                // {
+                //   uv  = 8.3,
+                //   uv_time = "2020-06-29T13:32:07.067Z",
+                //   uv_max = 12.1,
+                //   uv_max_time = "2020-06-29T16:32:07.067Z",
+                //   safe_exposure_time = new SafeExposureTimeDto
+                //   {
+                //       st1 = 10,
+                //       st2 = 20,
+                //       st3 = 30,
+                //       st4 = 40,
+                //       st5 = 50,
+                //       st6 = 60
+                //   }
+                // },
                 WeatherInfo = weatherData,
                 Users = _mapper.Map<IEnumerable<UserDto>>(usersFromRepo),
             };
