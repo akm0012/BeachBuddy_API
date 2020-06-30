@@ -63,17 +63,17 @@ namespace BeachBuddy
 
             services.AddDbContext<BeachBuddyContext>(options =>
             {
-                if (CurrentEnvironment.IsDevelopment())
-                {
+                // if (CurrentEnvironment.IsDevelopment())
+                // {
                     // Use local Docker DB
                     options.UseSqlServer(Configuration.GetConnectionString("BeachBuddyDB"));
-                }
-                else
-                {
+                // }
+                // else
+                // {
                     // In Prod use the Docker-Compose database
-                    var connection = @"Server=db;Database=BeachBuddyDB;User=sa;Password=abcABC123;";
-                    options.UseSqlServer(connection);
-                }
+                    // var connection = @"Server=db;Database=BeachBuddyDB;User=sa;Password=abcABC123;";
+                    // options.UseSqlServer(connection);
+                // }
             });
         }
 
