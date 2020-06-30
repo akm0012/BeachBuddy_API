@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,6 +11,8 @@ using BeachBuddy.Repositories;
 using BeachBuddy.Services.Weather;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
 
 namespace BeachBuddy.Controllers
 {
@@ -24,8 +24,12 @@ namespace BeachBuddy.Controllers
         private readonly IBeachBuddyRepository _beachBuddyRepository;
         private readonly IMapper _mapper;
         private readonly IWeatherService _weatherService;
+        private readonly IHostApplicationLifetime _appLifetime;
 
-        public DashboardController(BeachBuddyContext context, IBeachBuddyRepository beachBuddyRepository, IMapper mapper, IWeatherService weatherService)
+        public DashboardController(BeachBuddyContext context, IBeachBuddyRepository beachBuddyRepository,
+            IMapper mapper,
+            IWeatherService weatherService,
+            IHostApplicationLifetime appLifetime)
         {
             _context = context;
 
@@ -34,22 +38,23 @@ namespace BeachBuddy.Controllers
             _mapper = mapper ??
                       throw new ArgumentNullException(nameof(mapper));
             _weatherService = weatherService;
+            _appLifetime = appLifetime;
         }
 
         [HttpGet]
         public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] LatLonParameters latLonParameters)
         {
             var beachConditions = await _weatherService.GetBeachConditions();
-            
+
             // todo: Un comment when go live
             var uvDto = await _weatherService.GetCurrentUVIndex(latLonParameters);
-            
+
             var weatherData = await _weatherService.GetWeather(latLonParameters);
             var usersFromRepo = await _beachBuddyRepository.GetUsers();
             var dashboardDto = new DashboardDto
             {
                 BeachConditions = beachConditions,
-                DashboardUvDto =  _mapper.Map<DashboardUVDto>(uvDto),
+                DashboardUvDto = _mapper.Map<DashboardUVDto>(uvDto),
                 // Todo: this can be deleted
                 // DashboardUvDto = new DashboardUVDto
                 // {
@@ -80,6 +85,13 @@ namespace BeachBuddy.Controllers
             await _context.Database.EnsureDeletedAsync();
             await _context.Database.MigrateAsync();
 
+            return Ok();
+        }
+
+        [HttpDelete("StopServer")]
+        public ActionResult StopServer()
+        {
+            _appLifetime.StopApplication();
             return Ok();
         }
     }
