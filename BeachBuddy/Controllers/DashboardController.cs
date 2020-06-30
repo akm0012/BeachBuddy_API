@@ -46,11 +46,9 @@ namespace BeachBuddy.Controllers
         {
             var beachConditions = await _weatherService.GetBeachConditions();
 
-            // todo: Un comment when go live
             var uvDto = await _weatherService.GetCurrentUVIndex(latLonParameters);
-
             var weatherData = await _weatherService.GetWeather(latLonParameters);
-            // var usersFromRepo = await _beachBuddyRepository.GetUsers();
+            var usersFromRepo = await _beachBuddyRepository.GetUsers();
             var dashboardDto = new DashboardDto
             {
                 BeachConditions = beachConditions,
@@ -73,7 +71,7 @@ namespace BeachBuddy.Controllers
                 //   }
                 // },
                 WeatherInfo = weatherData,
-                // Users = _mapper.Map<IEnumerable<UserDto>>(usersFromRepo),
+                Users = _mapper.Map<IEnumerable<UserDto>>(usersFromRepo),
             };
 
             return Ok(dashboardDto);
