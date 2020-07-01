@@ -130,7 +130,7 @@ namespace BeachBuddy.Services.Weather
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 // Keep in cache for this time, reset time if accessed.
                 .SetAbsoluteExpiration(TimeSpan
-                    .FromMinutes(5));
+                    .FromMinutes(15));
             // Save data in cache.
             _memoryCache.Set("GetBeachConditions", visitBeachesDto, cacheEntryOptions);
             
