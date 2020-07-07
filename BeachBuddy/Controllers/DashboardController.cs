@@ -12,6 +12,7 @@ using BeachBuddy.Services.Weather;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
 
 namespace BeachBuddy.Controllers
@@ -25,11 +26,14 @@ namespace BeachBuddy.Controllers
         private readonly IMapper _mapper;
         private readonly IWeatherService _weatherService;
         private readonly IHostApplicationLifetime _appLifetime;
+        private readonly ILogger _logger;
 
-        public DashboardController(BeachBuddyContext context, IBeachBuddyRepository beachBuddyRepository,
+        public DashboardController(BeachBuddyContext context, 
+            IBeachBuddyRepository beachBuddyRepository,
             IMapper mapper,
             IWeatherService weatherService,
-            IHostApplicationLifetime appLifetime)
+            IHostApplicationLifetime appLifetime,
+            ILogger<DashboardController> logger)
         {
             _context = context;
 
@@ -39,12 +43,21 @@ namespace BeachBuddy.Controllers
                       throw new ArgumentNullException(nameof(mapper));
             _weatherService = weatherService;
             _appLifetime = appLifetime;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] LatLonParameters latLonParameters)
         {
-            var beachConditions = await _weatherService.GetBeachConditions();
+            VisitBeachesDto beachConditions = null;
+            try
+            {
+                beachConditions = await _weatherService.GetBeachConditions();
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Beach Conditions could not be grabbed: " + e.Message);
+            }
 
             var uvDto = await _weatherService.GetCurrentUVIndex(latLonParameters);
             var weatherData = await _weatherService.GetWeather(latLonParameters);
