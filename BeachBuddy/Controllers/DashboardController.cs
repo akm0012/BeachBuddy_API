@@ -67,7 +67,7 @@ namespace BeachBuddy.Controllers
                 BeachConditions = beachConditions,
                 DashboardUvDto = _mapper.Map<DashboardUVDto>(uvDto),
                 // Todo: this can be deleted
-                // DashboardUvDto = new DashboardUVDto
+                // DashboardUvDto = new DashboardUVDto 
                 // {
                 //   uv  = 8.3,
                 //   uv_time = "2020-06-29T13:32:07.067Z",
