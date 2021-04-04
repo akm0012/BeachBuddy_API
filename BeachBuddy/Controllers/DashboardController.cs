@@ -49,7 +49,7 @@ namespace BeachBuddy.Controllers
         [HttpGet]
         public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] LatLonParameters latLonParameters)
         {
-            VisitBeachesDto beachConditions = null;
+            BeachConditionsDto beachConditions = null;
             try
             {
                 beachConditions = await _weatherService.GetBeachConditions();

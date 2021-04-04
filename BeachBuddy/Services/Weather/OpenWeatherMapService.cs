@@ -109,8 +109,15 @@ namespace BeachBuddy.Services.Weather
             return openUvDto;
         }
 
-        public async Task<VisitBeachesDto> GetBeachConditions()
+        public async Task<BeachConditionsDto> GetBeachConditions()
         {
+            // Look for cached version
+            if (_memoryCache.TryGetValue("GetBeachConditions", out BeachConditionsDto cachedBeachConditionsDto))
+            {
+                //  We found it in cache, use this.
+                return cachedBeachConditionsDto;
+            }
+
             const string requestUri = "https://api.visitbeaches.org/graphql";
             
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
@@ -130,6 +137,7 @@ namespace BeachBuddy.Services.Weather
             });
             
             // Strip out the info we really care about 
+            BeachConditionsDto beachConditionsDto;
             try
             {
                 var beachReport = visitBeachesDto.Data.Beach.LastThreeDaysOfReports[0];
@@ -142,8 +150,17 @@ namespace BeachBuddy.Services.Weather
                 var surfCondition = beachReport.BeachReport[2].ReportParameters[3].ParameterValues[0].Name;
 
                 var jellyFish = beachReport.BeachReport[8].ReportParameters[0].ParameterValues[0].Name;
-                
-                
+
+                beachConditionsDto = new BeachConditionsDto()
+                {
+                    UpdatedTime = updatedTime,
+                    FlagColor = flagColor,
+                    RespiratoryIrritation = respiratoryIrritation,
+                    SurfHeight = surfHeight,
+                    SurfCondition = surfCondition,
+                    JellyFishPresent = jellyFish,
+                };
+
             }
             catch (Exception e)
             {
@@ -152,9 +169,20 @@ namespace BeachBuddy.Services.Weather
                 return null;
             }
 
-            return visitBeachesDto;
+            // Save to cache
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                // Keep in cache for this time, reset time if accessed.
+                .SetAbsoluteExpiration(TimeSpan
+                    .FromMinutes(15));
+            // Save data in cache.
+            _memoryCache.Set("GetBeachConditions", beachConditionsDto, cacheEntryOptions);
+            
+            return beachConditionsDto;
         }
 
+        /**
+         * This was the old way where I stripped some HTML. Going to keep this as it may come in handy later. 
+         */
         public async Task<VisitBeachesDto> GetBeachConditionsOld()
         {
             // Look for cached version

@@ -8,6 +8,6 @@ namespace BeachBuddy.Services.Weather
     {
         Task<OpenWeatherDto> GetWeather(LatLonParameters latLonParameters);
         Task<OpenUVDto> GetCurrentUVIndex(LatLonParameters latLngParameters);
-        Task<VisitBeachesDto> GetBeachConditions();
+        Task<BeachConditionsDto> GetBeachConditions();
     }
 }
