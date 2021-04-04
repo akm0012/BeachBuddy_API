@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Dtos;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -16,9 +18,11 @@ namespace BeachBuddy.Services.Weather
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<OpenWeatherMapService> _logger;
 
-        public OpenWeatherMapService(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
+        public OpenWeatherMapService(ILogger<OpenWeatherMapService> logger, IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
         {
+            _logger = logger;
             _clientFactory = httpClientFactory;
             _memoryCache = memoryCache;
         }
@@ -106,6 +110,52 @@ namespace BeachBuddy.Services.Weather
         }
 
         public async Task<VisitBeachesDto> GetBeachConditions()
+        {
+            const string requestUri = "https://api.visitbeaches.org/graphql";
+            
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
+
+            const string requestBody = "{\n\t\"query\": \"query GetBeach($id: ID!) {\\n  beach(id: $id) {\\n    ...WithLastThreeReports\\n  }\\n}\\n\\nfragment WithLastThreeReports on Beach {\\n  lastThreeDaysOfReports {\\n    ...BeachReport\\n  }\\n}\\n\\nfragment BeachReport on Report {\\n  id\\n  createdAt\\n  latitude\\n  longitude\\n  beachReport {\\n    parameterCategory {\\n      ...ParameterCategory\\n    }\\n    reportParameters {\\n      parameterValues {\\n        ...ParameterValue\\n      }\\n      value\\n    }\\n  }\\n}\\n\\nfragment ParameterCategory on ParameterCategory {\\n  id\\n  name\\n  description\\n}\\n\\nfragment ParameterValue on ParameterValue {\\n  id\\n  name\\n  description\\n  value\\n}\\n\",\n\t\"variables\": {\n\t\t\"id\": \"2\"\n\t}\n}";
+            request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+            
+            var client = _clientFactory.CreateClient();
+            
+            var response = await client.SendAsync(request);
+            if (!response.IsSuccessStatusCode) return null;
+            await using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            var visitBeachesDto = await JsonSerializer.DeserializeAsync<VisitBeachesDto>(responseStream, new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+            
+            // Strip out the info we really care about 
+            try
+            {
+                var beachReport = visitBeachesDto.Data.Beach.LastThreeDaysOfReports[0];
+
+                var updatedTime = beachReport.CreatedAt;
+                var flagColor = beachReport.BeachReport[0].ReportParameters[0].ParameterValues[0].Name;
+                var respiratoryIrritation = beachReport.BeachReport[6].ReportParameters[0].ParameterValues[0].Name;
+                
+                var surfHeight = beachReport.BeachReport[2].ReportParameters[1].ParameterValues[0].Name;
+                var surfCondition = beachReport.BeachReport[2].ReportParameters[3].ParameterValues[0].Name;
+
+                var jellyFish = beachReport.BeachReport[8].ReportParameters[0].ParameterValues[0].Name;
+                
+                
+            }
+            catch (Exception e)
+            {
+                // Something messed up! 
+                _logger.LogError(e, e.InnerException?.Message);
+                return null;
+            }
+
+            return visitBeachesDto;
+        }
+
+        public async Task<VisitBeachesDto> GetBeachConditionsOld()
         {
             // Look for cached version
             if (_memoryCache.TryGetValue("GetBeachConditions", out VisitBeachesDto visitBeachesDto))

@@ -1,59 +1,57 @@
+using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace BeachBuddy.Models.Dtos
 {
     public class VisitBeachesDto
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public Latest Latest { get; set; }
+        public Data Data { get; set; }
     }
 
-    public class Latest
+    public class Data
     {
-        [JsonProperty("updated_at")]
-        public string UpdatedAt { get; set; }
-        
-        public string Flag { get; set; }
-        
-        public string Deadfish { get; set; }
+        public Beach Beach { get; set; }
+    }
 
-        [JsonProperty("water_color")]
-        public string WaterColor { get; set; }
-        
-        public string Surf { get; set; }
-        
-        [JsonProperty("surf_type")]
-        public string SurfType { get; set; }
-        
-        [JsonProperty("surf_height")]
-        public string SurfHeight { get; set; }
-        
-        [JsonProperty("respiratory_irritation")]
-        public string RespiratoryIrritation { get; set; }
-        
-        [JsonProperty("water_surface_tempature")]
-        public string WaterTemp { get; set; }
-        
-        [JsonProperty("air_tempature")]
-        public string AirTemp { get; set; }
-        
-        [JsonProperty("crowds")]
-        public string Crowds { get; set; }
-        
-        [JsonProperty("jellyfish")]
-        public string JellyFish { get; set; }
-        
-        [JsonProperty("rip_current")]
-        public string RipCurrent { get; set; }
-        
-        [JsonProperty("weather_summary")]
-        public string WeatherSummary { get; set; }
-        
-        [JsonProperty("wind_speed")]
-        public string WindSpeed { get; set; }
-        
-        [JsonProperty("red_drift")]
-        public string RedDrift { get; set; }
+    public class Beach
+    {
+        public List<Report> LastThreeDaysOfReports { get; set; }
+    }
+
+    public class Report
+    {
+        public string Id { get; set; }
+        public string CreatedAt { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public List<BeachReport> BeachReport { get; set; }
+    }
+
+    public class BeachReport
+    {
+        public ParameterCategory ParameterCategory { get; set; }
+        public List<ReportParameters> ReportParameters { get; set; }
+    }
+
+    public class ParameterCategory
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+    
+    public class ReportParameters
+    {
+        public List<ParameterValue> ParameterValues { get; set; }
+        public string Value { get; set; }
+    }
+
+    public class ParameterValue
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Value { get; set; }
     }
 }
