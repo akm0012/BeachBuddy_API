@@ -192,6 +192,8 @@ namespace BeachBuddy.Services.Weather
                 return visitBeachesDto;
             }
             
+            // Note that this does not work anymore. The visitbeaches website now uses a GraphQL endpoint to get all this info.
+            
             // Scrape the HTML from VisitBeaches to get the beach conditions. 
             List<VisitBeachesDto> visitBeachesDtos;
             WebClient client = new WebClient();
