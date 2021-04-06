@@ -154,7 +154,7 @@ namespace BeachBuddy.Services.Weather
                 beachConditionsDto = new BeachConditionsDto()
                 {
                     UpdatedTime = updatedTime,
-                    FlagColor = updatedTime,
+                    FlagColor = flagColor,
                     RespiratoryIrritation = respiratoryIrritation,
                     SurfHeight = surfHeight,
                     SurfCondition = surfCondition,
