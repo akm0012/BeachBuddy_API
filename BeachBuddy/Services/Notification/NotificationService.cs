@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BeachBuddy.Entities;
+using BeachBuddy.Enums;
 using BeachBuddy.Repositories;
 using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
@@ -20,8 +21,11 @@ namespace BeachBuddy.Services.Notification
             _beachBuddyRepository = beachBuddyRepository;
         }
 
-        public async Task sendNotification(RequestedItem requestedItem, string notificationTitle,
-            string notificationMessage, bool dataOnly)
+        public async Task sendNotification(RequestedItem requestedItem, 
+            NotificationType notificationType,
+            string notificationTitle,
+            string notificationMessage, 
+            bool dataOnly)
         {
             var devices = await _beachBuddyRepository.GetDevices();
 
@@ -31,6 +35,7 @@ namespace BeachBuddy.Services.Notification
             {
                 data = new Dictionary<string, string>
                 {
+                    {"notificationType", notificationType.ToString()},
                     {"updateOnly", "true"}
                 };  
             }
@@ -38,6 +43,7 @@ namespace BeachBuddy.Services.Notification
             {
                 data = new Dictionary<string, string>
                 {
+                    {"notificationType", notificationType.ToString()},
                     {"updateOnly", "false"},
                     {"name", $"{requestedItem.Name}"},
                     {"count", $"{requestedItem.Count}"},

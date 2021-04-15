@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.DbContexts;
+using BeachBuddy.Enums;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Dtos;
 using BeachBuddy.Models.Dtos.Item;
 using BeachBuddy.Models.Dtos.User;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services.Notification;
 using BeachBuddy.Services.Weather;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,11 +29,13 @@ namespace BeachBuddy.Controllers
         private readonly IWeatherService _weatherService;
         private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger _logger;
+        private readonly INotificationService _notificationService;
 
         public DashboardController(BeachBuddyContext context, 
             IBeachBuddyRepository beachBuddyRepository,
             IMapper mapper,
             IWeatherService weatherService,
+            INotificationService notificationService,
             IHostApplicationLifetime appLifetime,
             ILogger<DashboardController> logger)
         {
@@ -42,6 +46,7 @@ namespace BeachBuddy.Controllers
             _mapper = mapper ??
                       throw new ArgumentNullException(nameof(mapper));
             _weatherService = weatherService;
+            _notificationService = notificationService;
             _appLifetime = appLifetime;
             _logger = logger;
         }
@@ -103,6 +108,13 @@ namespace BeachBuddy.Controllers
         public ActionResult StopServer()
         {
             _appLifetime.StopApplication();
+            return Ok();
+        }
+
+        [HttpPost("/refresh")]
+        public ActionResult NotifySystemWideRefresh()
+        {
+            _notificationService.sendNotification(null, NotificationType.DashboardPulledToRefresh, null, null, true);
             return Ok();
         }
     }

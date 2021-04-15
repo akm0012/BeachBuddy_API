@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BeachBuddy.Entities;
+using BeachBuddy.Enums;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Files;
 using BeachBuddy.Repositories;
@@ -68,7 +69,7 @@ namespace BeachBuddy.Twilio
                 case "remove":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage);
                     // Send data notification so app will update
-                    await _notificationService.sendNotification(null, null, null, true);
+                    await _notificationService.sendNotification(null, NotificationType.RequestedItemRemoved, null, null, true);
                     return;
 
                 case "list":
@@ -82,7 +83,7 @@ namespace BeachBuddy.Twilio
                 case "nukefromorbit":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage, true);
                     // Send data notification so app will update
-                    await _notificationService.sendNotification(null, null, null, true);
+                    await _notificationService.sendNotification(null, NotificationType.RequestedItemRemoved, null, null, true);
                     return;
 
                 case "bal":
@@ -146,6 +147,7 @@ namespace BeachBuddy.Twilio
 
             await _notificationService.sendNotification(
                 await _beachBuddyRepository.GetRequestedItem(requestedItemToSave.Id),
+                NotificationType.RequestedItemAdded,
                 $"\"{requestedItemToSave.Name}\" added to list", $"{userWhoSentMessage.FirstName} " +
                                                                  $"added {requestedItemToSave.Count} {requestedItemToSave.Name} to the Beach List.",
                 false);

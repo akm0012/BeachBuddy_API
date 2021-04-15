@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.Entities;
+using BeachBuddy.Enums;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Dtos.Score;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services.Notification;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeachBuddy.Controllers
@@ -16,11 +18,15 @@ namespace BeachBuddy.Controllers
     {
         private readonly IBeachBuddyRepository _beachBuddyRepository;
         private readonly IMapper _mapper;
+        private readonly INotificationService _notificationService;
 
-        public ScoresController(IBeachBuddyRepository beachBuddyRepository, IMapper mapper)
+        public ScoresController(IBeachBuddyRepository beachBuddyRepository, 
+            INotificationService notificationService,
+            IMapper mapper)
         {
             _beachBuddyRepository = beachBuddyRepository ??
                                     throw new ArgumentNullException(nameof(beachBuddyRepository));
+            _notificationService = notificationService;
             _mapper = mapper ??
                       throw new ArgumentNullException(nameof(mapper));
         }
@@ -50,6 +56,7 @@ namespace BeachBuddy.Controllers
             _beachBuddyRepository.UpdateScore(scoreToUpdate);
             await _beachBuddyRepository.Save();
 
+            await _notificationService.sendNotification(null, NotificationType.ScoreUpdated, null, null, true);
             return NoContent();
         }
         
@@ -77,6 +84,7 @@ namespace BeachBuddy.Controllers
 
             await _beachBuddyRepository.Save();
 
+            await _notificationService.sendNotification(null, NotificationType.ScoreUpdated, null, null, true);
             return Ok();
         }
     }

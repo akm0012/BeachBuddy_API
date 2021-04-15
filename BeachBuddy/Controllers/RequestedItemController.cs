@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.Entities;
+using BeachBuddy.Enums;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Dtos.RequestedItem;
 using BeachBuddy.Repositories;
@@ -95,7 +96,7 @@ namespace BeachBuddy.Controllers
             var itemToReturn = _mapper.Map<RequestedItemDto>(itemToUpdate);
 
             // Notify other devices an item has been changed 
-            await _notificationService.sendNotification(itemToUpdate, null, null, true);
+            await _notificationService.sendNotification(itemToUpdate, NotificationType.RequestedItemCompleted, null, null, true);
                 
             return Ok(itemToReturn);
         }
