@@ -6,6 +6,7 @@ using BeachBuddy.Entities;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Dtos.RequestedItem;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services.Notification;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeachBuddy.Controllers
@@ -16,13 +17,17 @@ namespace BeachBuddy.Controllers
     {
         private readonly IBeachBuddyRepository _beachBuddyRepository;
         private readonly IMapper _mapper;
+        private readonly INotificationService _notificationService;
 
-        public RequestedItemController(IBeachBuddyRepository beachBuddyRepository, IMapper mapper)
+        public RequestedItemController(IBeachBuddyRepository beachBuddyRepository, 
+            IMapper mapper,
+            INotificationService notificationService)
         {
             _beachBuddyRepository = beachBuddyRepository ??
                                     throw new ArgumentNullException(nameof(beachBuddyRepository));
             _mapper = mapper ??
                       throw new ArgumentNullException(nameof(mapper));
+            _notificationService = notificationService;
         }
         
         [HttpGet]
@@ -89,6 +94,9 @@ namespace BeachBuddy.Controllers
 
             var itemToReturn = _mapper.Map<RequestedItemDto>(itemToUpdate);
 
+            // Notify other devices an item has been changed 
+            await _notificationService.sendNotification(itemToUpdate, null, null, true);
+                
             return Ok(itemToReturn);
         }
         
