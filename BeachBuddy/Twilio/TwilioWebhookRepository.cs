@@ -66,6 +66,10 @@ namespace BeachBuddy.Twilio
 
             switch (firstWordOfMessage.ToLower())
             {
+                case "refresh":
+                    await _notificationService.sendNotification(null, NotificationType.DashboardPulledToRefresh, null, null, true);
+                    return;
+                
                 case "remove":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage);
                     // Send data notification so app will update
@@ -208,6 +212,7 @@ namespace BeachBuddy.Twilio
                                     "add game {gameName} - Will add a new game.\n\n" +
                                     "leaderboard - Will show all the scores.\n\n" +
                                     "+1 {userName} {gameName} - Will increment your score. {userName} is optional.\n\n" +
+                                    "refresh - Will force refresh the TV Dashboard.\n\n" +
                                     "bal - Will show current Twilio balance.\n\n" +
                                     "NukeFromOrbit - Will delete all beach list items.";
 
@@ -361,6 +366,7 @@ namespace BeachBuddy.Twilio
             _beachBuddyRepository.UpdateScore(scoreToEdit);
             await _beachBuddyRepository.Save();
             
+            await _notificationService.sendNotification(null, NotificationType.ScoreUpdated, null, null, true);
             await _twilioService.SendSms(toNumber, fromNumber,
                 $"{userWhoseScoreToManipulate.FirstName} now has {scoreToEdit.WinCount} win(s) in {gameName}!");
         }
