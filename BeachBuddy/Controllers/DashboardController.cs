@@ -112,9 +112,9 @@ namespace BeachBuddy.Controllers
         }
 
         [HttpPost("refresh")]
-        public ActionResult NotifySystemWideRefresh()
+        public async Task<ActionResult> NotifySystemWideRefresh()
         {
-            _notificationService.sendNotification(null, NotificationType.DashboardPulledToRefresh, null, null, true);
+            await _notificationService.sendNotification(null, NotificationType.DashboardPulledToRefresh, null, null, true);
             return Ok();
         }
     }
