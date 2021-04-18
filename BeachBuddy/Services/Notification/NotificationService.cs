@@ -45,6 +45,7 @@ namespace BeachBuddy.Services.Notification
                 {
                     {"notificationType", notificationType.ToString()},
                     {"updateOnly", "false"},
+                    {"itemId", $"{requestedItem.Id}"},
                     {"name", $"{requestedItem.Name}"},
                     {"count", $"{requestedItem.Count}"},
                     {"sentByUserId", $"{requestedItem.RequestedByUserId}"}
