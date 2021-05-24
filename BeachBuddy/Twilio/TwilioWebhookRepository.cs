@@ -81,7 +81,7 @@ namespace BeachBuddy.Twilio
                 
                 case "remove":
                     await RemoveItems(fromNumber, toNumber, text, firstWordOfMessage);
-                    // Send data notification so app will update
+                    // Send data notification so app will update 
                     await _notificationService.sendNotification(null, NotificationType.RequestedItemRemoved, null, null, true);
                     return;
 
