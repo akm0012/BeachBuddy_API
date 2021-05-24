@@ -60,19 +60,15 @@ namespace BeachBuddy.Services
             {
                 foreach (var reminder in sunscreenIsDryReminders)
                 {
-                    
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var context = scope.ServiceProvider.GetService<IBeachBuddyRepository>();
                         var user = context.GetUser(reminder.UserId).Result;
 
                         var twilioService = scope.ServiceProvider.GetService<ITwilioService>();
-                        twilioService.SendSms("+17703557591", "Put on sunscreen!");
-                        
-                        _logger.LogInformation("Send reminder text to: " + user.FirstName);
+                        _logger.LogInformation($"{user.FirstName} sunscreen should be dry. Sending text...");
+                        twilioService.SendSms(user.PhoneNumber, $"{user.FirstName}, your sunscreen should be dry by now. Go get in that sun! 😎");
                     }
-                    
-                    // _twilioService.SendSms()
                 }
             }
 
@@ -80,7 +76,15 @@ namespace BeachBuddy.Services
             {
                 foreach (var reminder in reapplySunscreenReminders)
                 {
-                    _logger.LogInformation("Todo: Send out 'Reapply' reminders to User: %s", reminder.UserId);
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var context = scope.ServiceProvider.GetService<IBeachBuddyRepository>();
+                        var user = context.GetUser(reminder.UserId).Result;
+                        
+                        var twilioService = scope.ServiceProvider.GetService<ITwilioService>();
+                        _logger.LogInformation($"{user.FirstName} needs to reapply. Sending text...");
+                        twilioService.SendSms(user.PhoneNumber, $"{user.FirstName}, it's time to reapply sunscreen! 🥵 \n\nText \"{user.FirstName} reapplied\" if you want to be reminded in another 2 hours.");
+                    }
                 }
             }
         }
