@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BeachBuddy.DbContexts;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services;
 using BeachBuddy.Services.Notification;
 using BeachBuddy.Services.Twilio;
 using BeachBuddy.Services.Weather;
@@ -56,6 +57,10 @@ namespace BeachBuddy
             services.AddScoped<ITwilioService, TwilioService>();
             services.AddScoped<IWeatherService, OpenWeatherMapService>();
             services.AddScoped<INotificationService, NotificationService>();
+
+            // This was needed to make sure I was using the same instance of the Service: https://stackoverflow.com/questions/52036998/how-do-i-get-a-reference-to-an-ihostedservice-via-dependency-injection-in-asp-ne 
+            services.AddSingleton<TimedHostedService>();
+            services.AddSingleton<IHostedService>(p => p.GetService<TimedHostedService>());
 
             services.AddMemoryCache();
             
