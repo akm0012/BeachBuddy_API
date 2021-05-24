@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Twilio.Clients;
-using Twilio.Rest.Api.V2010;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
@@ -21,14 +20,14 @@ namespace BeachBuddy.Services.Twilio
             _client = client;
         }
         
-        public async Task<MessageResource> SendSms(string from, string to, string text,
+        public async Task<MessageResource> SendSms(string to, string text,
             IEnumerable<Uri> mediaUrls = null)
         {
             try
             {
                 return await MessageResource.CreateAsync(new CreateMessageOptions(new PhoneNumber(to))
                 {
-                    From = new PhoneNumber(from),
+                    From = new PhoneNumber(APIKeys.TwilioFromNumber),
                     Body = text,
                     MediaUrl = mediaUrls?.ToList(),
                     StatusCallback = null

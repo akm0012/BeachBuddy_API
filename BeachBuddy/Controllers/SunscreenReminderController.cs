@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BeachBuddy.Enums;
 using BeachBuddy.Models;
+using BeachBuddy.Repositories;
 using BeachBuddy.Services;
 using BeachBuddy.Services.Notification;
 using Microsoft.AspNetCore.Mvc;
@@ -15,32 +16,30 @@ namespace BeachBuddy.Controllers
     public class SunscreenReminderController : ControllerBase
     {
         private readonly ILogger<SunscreenReminderController> _logger;
-        private readonly INotificationService _notificationService;
-        private readonly TimedHostedService _timedHostedService;
+        private readonly IBeachBuddyRepository _beachBuddyRepository;
+        private readonly BackgroundTaskQueue _backgroundTaskQueue;
 
         public SunscreenReminderController(
-            TimedHostedService timedHostedService,
-            INotificationService notificationService,
+            IBeachBuddyRepository beachBuddyRepository,
+            BackgroundTaskQueue backgroundTaskQueue,
             ILogger<SunscreenReminderController> logger)
         {
-            _timedHostedService = timedHostedService;
-            _notificationService = notificationService;
+            _beachBuddyRepository = beachBuddyRepository ??
+                                    throw new ArgumentNullException(nameof(beachBuddyRepository));
+            _backgroundTaskQueue = backgroundTaskQueue;
             _logger = logger;
         }
 
-        [HttpPost("timerTest")]
-        public async Task<ActionResult> TimerTest()
+        [HttpPost("sunscreenApplied/{userId}")]
+        public async Task<ActionResult> AddSunscreenReminder(Guid userId)
         {
-            var reminder = new SunscreenReminder
+            var userExists = await _beachBuddyRepository.UserExists(userId);
+            if (!userExists)
             {
-                UserId = Guid.NewGuid(),
-                IsDryReminderTimeSeconds = DateTimeOffset.Now.ToUnixTimeSeconds() + 10,
-                ReapplyReminderTimeSeconds = DateTimeOffset.Now.ToUnixTimeSeconds() + 15,
-                HasIsDryReminderBeenSent = false,
-                HasReapplyReminderBeenSent = false
-            };
+                return NotFound();
+            }
 
-            _timedHostedService.AddSunscreenReminderToQueue(reminder);
+            _backgroundTaskQueue.QueueSunscreenReminderForUser(userId);
 
             return Ok();
         }

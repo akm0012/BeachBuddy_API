@@ -48,10 +48,10 @@ namespace BeachBuddy
                 "./beachbuddy-35d79-firebase-adminsdk-vv0wo-0d09f4abd7.json");
 
             return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
-                // This adds a service that runs as soon as the Program starts. 
-                .ConfigureServices(services => services.AddHostedService<TimedHostedService>());
+            // This adds a service that runs as soon as the Program starts. 
+            // .ConfigureServices(services => services.AddHostedService<TimedHostedService>());
         }
     }
 }

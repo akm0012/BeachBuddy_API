@@ -8,7 +8,7 @@ namespace BeachBuddy.Services.Twilio
 {
     public interface ITwilioService
     {
-        Task<MessageResource> SendSms(string from, string to, string text, IEnumerable<Uri> mediaUrls = null);
+        Task<MessageResource> SendSms(string toNumber, string text, IEnumerable<Uri> mediaUrls = null);
         Task<BalanceResource> GetAccountBalance();
     }
 }

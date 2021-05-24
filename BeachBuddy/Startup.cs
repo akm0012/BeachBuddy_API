@@ -58,10 +58,10 @@ namespace BeachBuddy
             services.AddScoped<IWeatherService, OpenWeatherMapService>();
             services.AddScoped<INotificationService, NotificationService>();
 
-            // This was needed to make sure I was using the same instance of the Service: https://stackoverflow.com/questions/52036998/how-do-i-get-a-reference-to-an-ihostedservice-via-dependency-injection-in-asp-ne 
-            services.AddSingleton<TimedHostedService>();
-            services.AddSingleton<IHostedService>(p => p.GetService<TimedHostedService>());
-
+            // Have to make this a singleton so it can act as a bridge b/t the Hosted Service and the rest of the code.
+            services.AddSingleton<BackgroundTaskQueue>();
+            services.AddHostedService<TimedHostedService>();
+            
             services.AddMemoryCache();
             
             services.AddHttpClient();

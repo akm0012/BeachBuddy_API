@@ -44,7 +44,7 @@ namespace BeachBuddy.Twilio
             var userWhoSentMessage = users.FirstOrDefault();
             if (userWhoSentMessage == null)
             {
-                await _twilioService.SendSms(toNumber, fromNumber, "Sorry, I don't know who you are.");
+                await _twilioService.SendSms(fromNumber, "Sorry, I don't know who you are.");
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace BeachBuddy.Twilio
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     $"Sorry, I didn't detect anything to add to the list.");
                 return;
             }
@@ -144,7 +144,7 @@ namespace BeachBuddy.Twilio
             {
                 _logger.LogError($"Something did not work when trying to save a requested item via Twilio: {e.Message}",
                     e);
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     $"Sorry, I couldn't add {text} to the list. Try again.)");
                 return;
             }
@@ -156,7 +156,7 @@ namespace BeachBuddy.Twilio
                                                                  $"added {requestedItemToSave.Count} {requestedItemToSave.Name} to the Beach List.",
                 false);
 
-            await _twilioService.SendSms(toNumber, fromNumber, $"\"{text}\" was added to the list!");
+            await _twilioService.SendSms(fromNumber, $"\"{text}\" was added to the list!");
         }
 
         private async Task RemoveItems(string fromNumber, string toNumber, string text, string firstWordOfMessage,
@@ -166,7 +166,7 @@ namespace BeachBuddy.Twilio
 
             if (string.IsNullOrWhiteSpace(text) && !nuke)
             {
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     $"Nothing was removed. If you want to remove everything send, \"NukeFromOrbit\"");
                 return;
             }
@@ -186,7 +186,7 @@ namespace BeachBuddy.Twilio
 
             await _beachBuddyRepository.Save();
 
-            await _twilioService.SendSms(toNumber, fromNumber, $"Removed {numItemsDeleted} item(s) from the list.");
+            await _twilioService.SendSms(fromNumber, $"Removed {numItemsDeleted} item(s) from the list.");
         }
 
         private async Task ShowAllItems(string fromNumber, string toNumber)
@@ -200,7 +200,7 @@ namespace BeachBuddy.Twilio
                 namesOfOutstandingItems = "(empty list)";
             }
 
-            await _twilioService.SendSms(toNumber, fromNumber, $"{namesOfOutstandingItems.Trim()}");
+            await _twilioService.SendSms(fromNumber, $"{namesOfOutstandingItems.Trim()}");
         }
 
         private async Task ShowHelp(string fromNumber, string toNumber)
@@ -216,14 +216,14 @@ namespace BeachBuddy.Twilio
                                     "bal - Will show current Twilio balance.\n\n" +
                                     "NukeFromOrbit - Will delete all beach list items.";
 
-            await _twilioService.SendSms(toNumber, fromNumber, $"{helpText.Trim()}");
+            await _twilioService.SendSms(fromNumber, $"{helpText.Trim()}");
         }
 
         private async Task GetBalance(string fromNumber, string toNumber)
         {
             var account = await _twilioService.GetAccountBalance();
 
-            await _twilioService.SendSms(toNumber, fromNumber, $"Current balance: ${account.Balance}");
+            await _twilioService.SendSms(fromNumber, $"Current balance: ${account.Balance}");
         }
 
         private async Task ShowLeaderBoard(string fromNumber, string toNumber)
@@ -247,21 +247,21 @@ namespace BeachBuddy.Twilio
 
             var textToSend = sb.ToString().Trim();
 
-            await _twilioService.SendSms(toNumber, fromNumber, textToSend);
+            await _twilioService.SendSms(fromNumber, textToSend);
         }
 
         private async Task AddGame(string gameName, string fromNumber, string toNumber)
         {
             if (string.IsNullOrWhiteSpace(gameName))
             {
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     $"The game name can not be empty.");
                 return;
             }
 
             if (gameName.Length > 15)
             {
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     "The game name can not be longer than 15 characters.");
                 return;
             }
@@ -287,7 +287,7 @@ namespace BeachBuddy.Twilio
 
             await _beachBuddyRepository.Save();
 
-            await _twilioService.SendSms(toNumber, fromNumber,
+            await _twilioService.SendSms(fromNumber,
                 $"{gameName} was added! If you play outside, don't forget sunscreen!");
         }
 
@@ -299,7 +299,7 @@ namespace BeachBuddy.Twilio
             var words = text.Split(" ");
             if (words.Length < 2)
             {
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     "I'm not sure what game you are referring to... Send 'h' for help.");
                 return;
             }
@@ -330,7 +330,7 @@ namespace BeachBuddy.Twilio
             var scoreToEdit = await _beachBuddyRepository.GetScore(userWhoseScoreToManipulate.Id, gameName);
             if (scoreToEdit == null)
             {
-                await _twilioService.SendSms(toNumber, fromNumber,
+                await _twilioService.SendSms(fromNumber,
                     $"Sorry, I could not find the game, {gameName}. You may need to add it first. Send 'h' for help.");
                 return;
             }
@@ -353,7 +353,7 @@ namespace BeachBuddy.Twilio
 
                     if (winCount <= 0)
                     {
-                        await _twilioService.SendSms(toNumber, fromNumber,
+                        await _twilioService.SendSms(fromNumber,
                             $"{userWhoseScoreToManipulate.FirstName} already has 0 wins in {gameName}");
                         return;
                     }
@@ -367,7 +367,7 @@ namespace BeachBuddy.Twilio
             await _beachBuddyRepository.Save();
             
             await _notificationService.sendNotification(null, NotificationType.ScoreUpdated, null, null, true);
-            await _twilioService.SendSms(toNumber, fromNumber,
+            await _twilioService.SendSms(fromNumber,
                 $"{userWhoseScoreToManipulate.FirstName} now has {scoreToEdit.WinCount} win(s) in {gameName}!");
         }
     }
