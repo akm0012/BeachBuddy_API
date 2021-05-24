@@ -83,7 +83,7 @@ namespace BeachBuddy.Services
                         
                         var twilioService = scope.ServiceProvider.GetService<ITwilioService>();
                         _logger.LogInformation($"{user.FirstName} needs to reapply. Sending text...");
-                        twilioService.SendSms(user.PhoneNumber, $"{user.FirstName}, it's time to reapply sunscreen! 🥵 \n\nText \"{user.FirstName} reapplied\" if you want to be reminded in another 2 hours.");
+                        twilioService.SendSms(user.PhoneNumber, $"{user.FirstName}, it's time to reapply sunscreen! 🥵 \n\nText \"done\" if you want to be reminded in another 2 hours.");
                     }
                 }
             }

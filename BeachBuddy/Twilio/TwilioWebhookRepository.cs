@@ -8,6 +8,7 @@ using BeachBuddy.Enums;
 using BeachBuddy.Models;
 using BeachBuddy.Models.Files;
 using BeachBuddy.Repositories;
+using BeachBuddy.Services;
 using BeachBuddy.Services.Notification;
 using BeachBuddy.Services.Twilio;
 using BeachBuddy.Services.Weather;
@@ -21,15 +22,18 @@ namespace BeachBuddy.Twilio
         private readonly IBeachBuddyRepository _beachBuddyRepository;
         private readonly ITwilioService _twilioService;
         private readonly INotificationService _notificationService;
+        private readonly BackgroundTaskQueue _backgroundTaskQueue;
 
         public TwilioWebhookRepository(ILogger<TwilioWebhookRepository> logger,
             IBeachBuddyRepository beachBuddyRepository, ITwilioService twilioService,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            BackgroundTaskQueue backgroundTaskQueue)
         {
             _logger = logger;
             _beachBuddyRepository = beachBuddyRepository;
             _twilioService = twilioService;
             _notificationService = notificationService;
+            _backgroundTaskQueue = backgroundTaskQueue;
         }
 
         public async Task MessageReceived(string fromNumber, string toNumber, string text, List<RemoteFile> files)
@@ -66,6 +70,11 @@ namespace BeachBuddy.Twilio
 
             switch (firstWordOfMessage.ToLower())
             {
+                case "done":
+                    _backgroundTaskQueue.QueueSunscreenReminderForUser(userWhoSentMessage.Id);
+                    await _twilioService.SendSms(fromNumber, "Great! I'll let you know once it's dry and then again when it's time to reapply. ⏱");
+                    return;
+                
                 case "refresh":
                     await _notificationService.sendNotification(null, NotificationType.DashboardPulledToRefresh, null, null, true);
                     return;
@@ -77,11 +86,11 @@ namespace BeachBuddy.Twilio
                     return;
 
                 case "list":
-                    await ShowAllItems(fromNumber, toNumber);
+                    await ShowAllItems(fromNumber);
                     return;
 
                 case "h":
-                    await ShowHelp(fromNumber, toNumber);
+                    await ShowHelp(fromNumber);
                     return;
 
                 case "nukefromorbit":
@@ -91,21 +100,21 @@ namespace BeachBuddy.Twilio
                     return;
 
                 case "bal":
-                    await GetBalance(fromNumber, toNumber);
+                    await GetBalance(fromNumber);
                     return;
 
                 case "add":
                     if (secondWordOfMessage != null && secondWordOfMessage == "game")
                     {
                         var gameName = text.Substring("add game".Length).Trim();
-                        await AddGame(gameName, fromNumber, toNumber);
+                        await AddGame(gameName, fromNumber);
                         return;
                     }
 
                     break;
 
                 case "leaderboard":
-                    await ShowLeaderBoard(fromNumber, toNumber);
+                    await ShowLeaderBoard(fromNumber);
                     return;
             }
 
@@ -189,7 +198,7 @@ namespace BeachBuddy.Twilio
             await _twilioService.SendSms(fromNumber, $"Removed {numItemsDeleted} item(s) from the list.");
         }
 
-        private async Task ShowAllItems(string fromNumber, string toNumber)
+        private async Task ShowAllItems(string fromNumber)
         {
             var outstandingItems = await _beachBuddyRepository.GetNotCompletedRequestedItems();
             var namesOfOutstandingItems =
@@ -203,7 +212,7 @@ namespace BeachBuddy.Twilio
             await _twilioService.SendSms(fromNumber, $"{namesOfOutstandingItems.Trim()}");
         }
 
-        private async Task ShowHelp(string fromNumber, string toNumber)
+        private async Task ShowHelp(string fromNumber)
         {
             const string helpText = "You can send these commands:\n\n" +
                                     "{quantity} {itemName} - Will add a new item. {quantity} is optional.\n\n" +
@@ -219,14 +228,14 @@ namespace BeachBuddy.Twilio
             await _twilioService.SendSms(fromNumber, $"{helpText.Trim()}");
         }
 
-        private async Task GetBalance(string fromNumber, string toNumber)
+        private async Task GetBalance(string fromNumber)
         {
             var account = await _twilioService.GetAccountBalance();
 
             await _twilioService.SendSms(fromNumber, $"Current balance: ${account.Balance}");
         }
 
-        private async Task ShowLeaderBoard(string fromNumber, string toNumber)
+        private async Task ShowLeaderBoard(string fromNumber)
         {
             var users = await _beachBuddyRepository.GetUsers();
 
@@ -250,7 +259,7 @@ namespace BeachBuddy.Twilio
             await _twilioService.SendSms(fromNumber, textToSend);
         }
 
-        private async Task AddGame(string gameName, string fromNumber, string toNumber)
+        private async Task AddGame(string gameName, string fromNumber)
         {
             if (string.IsNullOrWhiteSpace(gameName))
             {
