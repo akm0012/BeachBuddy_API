@@ -18,8 +18,8 @@ namespace BeachBuddy.Services
             var reminder = new SunscreenReminder
             {
                 UserId = userId,
-                IsDryReminderTimeSeconds = DateTimeOffset.Now.ToUnixTimeSeconds() + 10, // todo change to const
-                ReapplyReminderTimeSeconds = DateTimeOffset.Now.ToUnixTimeSeconds() + 15, // todo change to const
+                IsDryReminderTimeSeconds = DateTimeOffset.Now.ToUnixTimeSeconds() + DRY_TIME_SEC, 
+                ReapplyReminderTimeSeconds = DateTimeOffset.Now.ToUnixTimeSeconds() + REAPPLY_TIME_SEC,
                 HasIsDryReminderBeenSent = false,
                 HasReapplyReminderBeenSent = false
             };
