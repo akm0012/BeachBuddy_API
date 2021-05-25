@@ -221,6 +221,7 @@ namespace BeachBuddy.Twilio
                                     "add game {gameName} - Will add a new game.\n\n" +
                                     "leaderboard - Will show all the scores.\n\n" +
                                     "+1 {userName} {gameName} - Will increment your score. {userName} is optional.\n\n" +
+                                    "done - Will indicate you are done putting on sunscreen.\n\n" +
                                     "refresh - Will force refresh the TV Dashboard.\n\n" +
                                     "bal - Will show current Twilio balance.\n\n" +
                                     "NukeFromOrbit - Will delete all beach list items.";
