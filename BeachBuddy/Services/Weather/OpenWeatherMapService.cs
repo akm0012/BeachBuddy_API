@@ -146,7 +146,7 @@ namespace BeachBuddy.Services.Weather
                 var flagColor = beachReport.BeachReport[0].ReportParameters[0].ParameterValues[0].Name;
                 var respiratoryIrritation = beachReport.BeachReport[6].ReportParameters[0].ParameterValues[0].Name;
                 
-                var surfHeight = beachReport.BeachReport[2].ReportParameters[1].ParameterValues[1].Name;
+                var surfHeight = beachReport.BeachReport[2].ReportParameters[2].ParameterValues[0].Name;
                 var surfCondition = beachReport.BeachReport[2].ReportParameters[3].ParameterValues[0].Name;
 
                 var jellyFish = beachReport.BeachReport[8].ReportParameters[0].ParameterValues[0].Name;
