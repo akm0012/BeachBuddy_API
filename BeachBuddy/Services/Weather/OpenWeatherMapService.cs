@@ -141,15 +141,22 @@ namespace BeachBuddy.Services.Weather
             try
             {
                 var beachReport = visitBeachesDto.Data.Beach.LastThreeDaysOfReports[0];
-
-                var updatedTime = beachReport.CreatedAt;
-                var flagColor = beachReport.BeachReport[0].ReportParameters[0].ParameterValues[0].Name;
-                var respiratoryIrritation = beachReport.BeachReport[6].ReportParameters[0].ParameterValues[0].Name;
                 
-                var surfHeight = beachReport.BeachReport[2].ReportParameters[2].ParameterValues[0].Name;
-                var surfCondition = beachReport.BeachReport[2].ReportParameters[3].ParameterValues[0].Name;
+                // Beach Report Indexes
+                const int FLAG_COLOR_INDEX = 0; 
+                const int RESPIRATORY_IRRITATION_INDEX = 7; 
+                const int SURF_HEIGHT_INDEX = 2; 
+                const int SURF_CONDITION_INDEX = 2; 
+                const int JELLY_FISH_INDEX = 8; 
+                
+                var updatedTime = beachReport.CreatedAt;
+                var flagColor = beachReport.BeachReport[FLAG_COLOR_INDEX].ReportParameters[0].ParameterValues[0].Name;
+                var respiratoryIrritation = beachReport.BeachReport[RESPIRATORY_IRRITATION_INDEX].ReportParameters[0].ParameterValues[0].Name;
+                
+                var surfHeight = beachReport.BeachReport[SURF_HEIGHT_INDEX].ReportParameters[2].ParameterValues[0].Name;
+                var surfCondition = beachReport.BeachReport[SURF_CONDITION_INDEX].ReportParameters[3].ParameterValues[0].Name;
 
-                var jellyFish = beachReport.BeachReport[8].ReportParameters[0].ParameterValues[0].Name;
+                var jellyFish = beachReport.BeachReport[JELLY_FISH_INDEX].ReportParameters[0].ParameterValues[0].Name;
 
                 beachConditionsDto = new BeachConditionsDto()
                 {
