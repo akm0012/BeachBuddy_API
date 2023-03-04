@@ -43,7 +43,9 @@ namespace BeachBuddy.Services
         private void DoWork(object state)
         {
             var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
-            _logger.LogInformation("Checking if any SunscreenReminders need to be sent out: " + currentTime);
+            
+            // Will clutter logs, runs every 5 sec. Only use while debugging 
+            // _logger.LogInformation("Checking if any SunscreenReminders need to be sent out: " + currentTime);
 
             // Add any new Reminders
             var remindersToAdd = _backgroundTaskQueue.DequeueSunscreenReminders();
