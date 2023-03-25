@@ -26,8 +26,8 @@ namespace BeachBuddy.Twilio
         private readonly IWeatherService _weatherService;
         private readonly BackgroundTaskQueue _backgroundTaskQueue;
 
-        public const string StatusCommand = "status";
-        public const string ViewErrorCommand = "errors";
+        private const string StatusCommand = "status";
+        private const string ViewErrorCommand = "errors";
         
         public TwilioWebhookRepository(ILogger<TwilioWebhookRepository> logger,
             IBeachBuddyRepository beachBuddyRepository, 
