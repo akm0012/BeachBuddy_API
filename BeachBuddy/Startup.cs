@@ -50,6 +50,7 @@ namespace BeachBuddy
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IBeachBuddyRepository, BeachBuddyRepository>();
+            services.AddScoped<IStatusRepository, StatusRepository>();
             services.AddScoped<ITwilioWebhookRepository, TwilioWebhookRepository>();
 
             services.AddHttpClient<ITwilioRestClient, TwilioClient>();
