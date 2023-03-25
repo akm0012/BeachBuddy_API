@@ -25,6 +25,7 @@ namespace BeachBuddy.Controllers
     {
         private readonly BeachBuddyContext _context;
         private readonly IBeachBuddyRepository _beachBuddyRepository;
+        private readonly IStatusRepository _statusRepository;
         private readonly IMapper _mapper;
         private readonly IWeatherService _weatherService;
         private readonly IHostApplicationLifetime _appLifetime;
@@ -33,6 +34,7 @@ namespace BeachBuddy.Controllers
 
         public DashboardController(BeachBuddyContext context, 
             IBeachBuddyRepository beachBuddyRepository,
+            IStatusRepository statusRepository,
             IMapper mapper,
             IWeatherService weatherService,
             INotificationService notificationService,
@@ -43,6 +45,8 @@ namespace BeachBuddy.Controllers
 
             _beachBuddyRepository = beachBuddyRepository ??
                                     throw new ArgumentNullException(nameof(beachBuddyRepository));
+            _statusRepository = statusRepository ??
+                                throw new ArgumentNullException(nameof(statusRepository));
             _mapper = mapper ??
                       throw new ArgumentNullException(nameof(mapper));
             _weatherService = weatherService;
@@ -116,6 +120,13 @@ namespace BeachBuddy.Controllers
         {
             await _notificationService.sendNotification(null, NotificationType.DashboardPulledToRefresh, null, null, true);
             return Ok();
+        }
+
+        [HttpGet("SystemStatus")]
+        public async Task<ActionResult<SystemStatusDto>> GetSystemStatus()
+        {
+            var systemStatus = await _statusRepository.GetSystemStatus();
+            return Ok(systemStatus);
         }
     }
 }

@@ -20,17 +20,22 @@ namespace BeachBuddy.Twilio
     {
         private readonly ILogger<TwilioWebhookRepository> _logger;
         private readonly IBeachBuddyRepository _beachBuddyRepository;
+        private readonly IStatusRepository _statusRepository;
         private readonly ITwilioService _twilioService;
         private readonly INotificationService _notificationService;
+        private readonly IWeatherService _weatherService;
         private readonly BackgroundTaskQueue _backgroundTaskQueue;
 
         public TwilioWebhookRepository(ILogger<TwilioWebhookRepository> logger,
-            IBeachBuddyRepository beachBuddyRepository, ITwilioService twilioService,
+            IBeachBuddyRepository beachBuddyRepository, 
+            IStatusRepository statusRepository, 
+            ITwilioService twilioService,
             INotificationService notificationService,
             BackgroundTaskQueue backgroundTaskQueue)
         {
             _logger = logger;
             _beachBuddyRepository = beachBuddyRepository;
+            _statusRepository = statusRepository;
             _twilioService = twilioService;
             _notificationService = notificationService;
             _backgroundTaskQueue = backgroundTaskQueue;
@@ -103,6 +108,14 @@ namespace BeachBuddy.Twilio
                     await GetBalance(fromNumber);
                     return;
 
+                case "status":
+                    await CheckSystemStatus(fromNumber);
+                    return;
+                
+                case "errors":
+                    await SendSystemStatusErrors(fromNumber);
+                    return;
+                
                 case "add":
                     if (secondWordOfMessage != null && secondWordOfMessage == "game")
                     {
@@ -224,11 +237,72 @@ namespace BeachBuddy.Twilio
                                     "done - Will indicate you are done putting on sunscreen.\n\n" +
                                     "refresh - Will force refresh the TV Dashboard.\n\n" +
                                     "bal - Will show current Twilio balance.\n\n" +
+                                    "status - Will show system status.\n\n" +
                                     "NukeFromOrbit - Will delete all beach list items.";
 
             await _twilioService.SendSms(fromNumber, $"{helpText.Trim()}");
         }
 
+        /**
+         * Checks the status of the various services and repositories to make sure things are still working. 
+         */
+        private async Task CheckSystemStatus(string fromNumber)
+        {
+            var systemStatus = await _statusRepository.GetSystemStatus();
+            
+            var statusString = new StringBuilder();
+            statusString.Append(GetStatusString("Database", systemStatus.IsDatabaseOk));
+            statusString.AppendLine();
+            statusString.Append(GetStatusString("Beach Conditions", systemStatus.IsBeachConditionsOk));
+            statusString.AppendLine();
+            statusString.Append(GetStatusString("Weather Forecast", systemStatus.IsWeatherOk));
+            statusString.AppendLine();
+            statusString.Append(GetStatusString("Current UV", systemStatus.IsCurrentUvIndexOk));
+            statusString.AppendLine();
+            statusString.Append(GetStatusString("Users", systemStatus.IsGetUsersOk));
+            statusString.AppendLine();
+            statusString.Append(GetStatusString("Twilio", systemStatus.IsCurrentUvIndexOk));
+            statusString.AppendLine();
+            statusString.Append($"Twilio balance: ${systemStatus.TwilioBalance}");
+
+            if (systemStatus.ErrorMessages.Count > 0)
+            {
+                statusString.AppendLine();
+                statusString.Append("Errors were present. ☠️ Send 'errors' to see them.");
+            }
+
+            await _twilioService.SendSms(fromNumber, statusString.ToString());
+        }
+
+        /**
+         * Sends any System Status errors. 
+         */
+        private async Task SendSystemStatusErrors(string fromNumber)
+        {
+            var systemStatus = await _statusRepository.GetSystemStatus();
+
+            if (systemStatus.ErrorMessages.Count > 0)
+            {
+                var errorString = new StringBuilder("Errors:");
+
+                foreach (var error in systemStatus.ErrorMessages)
+                {
+                    errorString.AppendLine();
+                    errorString.Append(error);
+                }
+                await _twilioService.SendSms(fromNumber, errorString.ToString());
+            }
+            else
+            {
+                await _twilioService.SendSms(fromNumber, "No errors found. ✅");
+            }
+        }
+        
+        private string GetStatusString(string statusName, bool isOk)
+        {
+            return isOk ? $"{statusName}: \t✅" : $"{statusName}: \t❌";
+        }
+        
         private async Task GetBalance(string fromNumber)
         {
             var account = await _twilioService.GetAccountBalance();
