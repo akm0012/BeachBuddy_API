@@ -62,10 +62,13 @@ namespace BeachBuddy.Twilio
             }
 
             var userWhoSentMessage = users.FirstOrDefault();
+            var words = text.Split(" ");
+            var firstWordOfMessage = words[0].ToLower();
+            
             if (userWhoSentMessage == null)
             {
                 // If the DB is down and we are trying to look up the Status, we should let this through.
-                if (text.ToLower().Equals(ViewErrorCommand) || text.ToLower().Equals(StatusCommand))
+                if (firstWordOfMessage.Equals(ViewErrorCommand) || firstWordOfMessage.Equals(StatusCommand))
                 {    
                     _logger.LogInformation("Database may be down. Letting unknown User through.");
                 }
@@ -75,9 +78,6 @@ namespace BeachBuddy.Twilio
                     return;
                 }
             }
-
-            var words = text.Split(" ");
-            var firstWordOfMessage = words[0].ToLower();
 
             var firstChar = firstWordOfMessage.ToCharArray()[0];
             if (firstChar == '+' || firstChar == '-')
