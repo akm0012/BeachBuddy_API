@@ -65,7 +65,7 @@ namespace BeachBuddy.Twilio
             if (userWhoSentMessage == null)
             {
                 // If the DB is down and we are trying to look up the Status, we should let this through.
-                if (text.Equals(ViewErrorCommand) || text.Equals(StatusCommand))
+                if (text.ToLower().Equals(ViewErrorCommand) || text.ToLower().Equals(StatusCommand))
                 {    
                     _logger.LogInformation("Database may be down. Letting unknown User through.");
                 }
@@ -319,7 +319,7 @@ namespace BeachBuddy.Twilio
         
         private string GetStatusString(string statusName, bool isOk)
         {
-            return isOk ? $"{statusName}: \t✅" : $"{statusName}: \t❌";
+            return isOk ? $"✅ {statusName}" : $"❌ {statusName}";
         }
         
         private async Task GetBalance(string fromNumber)
