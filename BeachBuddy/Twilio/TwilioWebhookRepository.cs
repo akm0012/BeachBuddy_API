@@ -26,6 +26,9 @@ namespace BeachBuddy.Twilio
         private readonly IWeatherService _weatherService;
         private readonly BackgroundTaskQueue _backgroundTaskQueue;
 
+        public const string StatusCommand = "status";
+        public const string ViewErrorCommand = "errors";
+        
         public TwilioWebhookRepository(ILogger<TwilioWebhookRepository> logger,
             IBeachBuddyRepository beachBuddyRepository, 
             IStatusRepository statusRepository, 
@@ -45,16 +48,32 @@ namespace BeachBuddy.Twilio
         {
             _logger.LogInformation($"New Incoming SMS from {fromNumber}: {text}");
 
-            var users = await _beachBuddyRepository.GetUsers(new UserResourceParameters()
+            IEnumerable<User> users = new List<User>();
+            try
             {
-                PhoneNumber = fromNumber
-            });
+                users = await _beachBuddyRepository.GetUsers(new UserResourceParameters()
+                {
+                    PhoneNumber = fromNumber
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error while looking up User: {e.Message}");
+            }
 
             var userWhoSentMessage = users.FirstOrDefault();
             if (userWhoSentMessage == null)
             {
-                await _twilioService.SendSms(fromNumber, "Sorry, I don't know who you are.");
-                return;
+                // If the DB is down and we are trying to look up the Status, we should let this through.
+                if (text.Equals(ViewErrorCommand) || text.Equals(StatusCommand))
+                {    
+                    _logger.LogInformation("Database may be down. Letting unknown User through.");
+                }
+                else
+                {
+                    await _twilioService.SendSms(fromNumber, "Sorry, I don't know who you are.");
+                    return;
+                }
             }
 
             var words = text.Split(" ");
@@ -108,11 +127,11 @@ namespace BeachBuddy.Twilio
                     await GetBalance(fromNumber);
                     return;
 
-                case "status":
+                case StatusCommand:
                     await CheckSystemStatus(fromNumber);
                     return;
                 
-                case "errors":
+                case ViewErrorCommand:
                     await SendSystemStatusErrors(fromNumber);
                     return;
                 
@@ -227,7 +246,7 @@ namespace BeachBuddy.Twilio
 
         private async Task ShowHelp(string fromNumber)
         {
-            const string helpText = "You can send these commands:\n\n" +
+            var helpText = "You can send these commands:\n\n" +
                                     "{quantity} {itemName} - Will add a new item. {quantity} is optional.\n\n" +
                                     "remove {itemName} - Will remove {nameOfItem} from the list name.\n\n" +
                                     "list - Will show all the uncompleted items in the list.\n\n" +
@@ -237,7 +256,7 @@ namespace BeachBuddy.Twilio
                                     "done - Will indicate you are done putting on sunscreen.\n\n" +
                                     "refresh - Will force refresh the TV Dashboard.\n\n" +
                                     "bal - Will show current Twilio balance.\n\n" +
-                                    "status - Will show system status.\n\n" +
+                                    $"{StatusCommand} - Will show system status.\n\n" +
                                     "NukeFromOrbit - Will delete all beach list items.";
 
             await _twilioService.SendSms(fromNumber, $"{helpText.Trim()}");
