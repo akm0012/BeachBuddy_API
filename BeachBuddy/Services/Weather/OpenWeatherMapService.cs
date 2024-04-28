@@ -33,7 +33,7 @@ namespace BeachBuddy.Services.Weather
             var lon = latLonParameters.Lon;
 
             var requestUri =
-                $"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&appid={APIKeys.OpenWeatherApiKey}&units=imperial";
+                $"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={APIKeys.OpenWeatherApiKey}&units=imperial";
 
             // Look for cached version
             if (_memoryCache.TryGetValue(requestUri, out OpenWeatherDto weatherDto))
@@ -148,6 +148,13 @@ namespace BeachBuddy.Services.Weather
                 const int SURF_HEIGHT_INDEX = 2; 
                 const int SURF_CONDITION_INDEX = 2; 
                 const int JELLY_FISH_INDEX = 8; 
+                
+                // Old versions that worked for like 30 min 
+                // const int FLAG_COLOR_INDEX = 0; 
+                // const int RESPIRATORY_IRRITATION_INDEX = 5; 
+                // const int SURF_HEIGHT_INDEX = 1; 
+                // const int SURF_CONDITION_INDEX = 1; 
+                // const int JELLY_FISH_INDEX = 7; 
                 
                 var updatedTime = beachReport.CreatedAt;
                 var flagColor = beachReport.BeachReport[FLAG_COLOR_INDEX].ReportParameters[0].ParameterValues[0].Name;
