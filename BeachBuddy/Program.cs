@@ -45,7 +45,7 @@ namespace BeachBuddy
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",
-                "./beachbuddy-35d79-firebase-adminsdk-vv0wo-0d09f4abd7.json");
+                "./beachbuddy-35d79-firebase-adminsdk-vv0wo-de069a4ff0.json");
 
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
