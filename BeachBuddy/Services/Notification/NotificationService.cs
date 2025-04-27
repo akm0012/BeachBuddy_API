@@ -116,7 +116,7 @@ namespace BeachBuddy.Services.Notification
                     };
                 }
 
-                var response = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(firebaseMessage);
+                var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(firebaseMessage);
                 return response.Responses;
             }
 
